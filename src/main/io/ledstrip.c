@@ -169,6 +169,56 @@ static const specialColorIndexes_t defaultSpecialColors[] = {
     }}
 };
 
+#define LF(name) LED_FUNCTION_ ## name
+#define LO(name) LED_FLAG_OVERLAY(LED_OVERLAY_ ## name)
+#define LD(name) LED_FLAG_DIRECTION(LED_DIRECTION_ ## name)
+
+#ifdef RIOTLEDCONFIG
+static const ledConfig_t defaultLedStripConfig[] = {
+    DEFINE_LED(1, 1, 5, 0 , LF(COLOR), 0, 0),
+	DEFINE_LED(1, 2, 5, 0 , LF(COLOR), 0, 0),
+    DEFINE_LED(1, 3, 5, 0 , LF(COLOR), 0, 0),
+    DEFINE_LED(1, 4, 5, 0 , LF(COLOR), 0, 0),
+    DEFINE_LED(1, 5, 5, 0 , LF(COLOR), 0, 0),
+    DEFINE_LED(2, 6, 5, 0 , LF(COLOR), 0, 0),
+    DEFINE_LED(2, 7, 5, 0 , LF(COLOR), 0, 0),
+    DEFINE_LED(2, 8, 5, 0 , LF(COLOR), 0, 0),
+    DEFINE_LED(1, 9, 5, 0 , LF(COLOR), 0, 0),
+    DEFINE_LED(2, 11, 5, 0 , LF(COLOR), 0, 0),
+    DEFINE_LED(3, 12, 5, 0 , LF(COLOR), 0, 0),
+    DEFINE_LED(4, 13, 5, 0 , LF(COLOR), 0, 0),
+    DEFINE_LED(5, 14, 5, 0 , LF(COLOR), 0, 0),
+    DEFINE_LED(6, 15, 5, 0 , LF(COLOR), 0, 0),
+    DEFINE_LED(7, 15, 5, 0 , LF(COLOR), 0, 0),
+    DEFINE_LED(8, 15, 5, 0 , LF(COLOR), 0, 0),
+    DEFINE_LED(9, 15, 5, 0 , LF(COLOR), 0, 0),
+    DEFINE_LED(10, 14, 5, 0 , LF(COLOR), 0, 0),
+    DEFINE_LED(11, 13, 5, 0 , LF(COLOR), 0, 0),
+    DEFINE_LED(12, 12, 5, 0 , LF(COLOR), 0, 0),
+    DEFINE_LED(13, 11, 5, 0 , LF(COLOR), 0, 0),
+    DEFINE_LED(14, 10, 5, 0 , LF(COLOR), 0, 0),
+    DEFINE_LED(13, 9, 5, 0 , LF(COLOR), 0, 0),
+    DEFINE_LED(13, 8, 5, 0 , LF(COLOR), 0, 0),
+    DEFINE_LED(13, 7, 5, 0 , LF(COLOR), 0, 0),
+    DEFINE_LED(14, 7, 5, 0 , LF(COLOR), 0, 0),
+    DEFINE_LED(14, 6, 5, 0 , LF(COLOR), 0, 0),
+    DEFINE_LED(15, 5, 5, 0 , LF(COLOR), 0, 0),
+    DEFINE_LED(15, 4, 5, 0 , LF(COLOR), 0, 0),
+    DEFINE_LED(15, 3, 5, 0 , LF(COLOR), 0, 0),
+    DEFINE_LED(15, 2, 5, 0 , LF(COLOR), 0, 0),
+    DEFINE_LED(15, 1, 5, 0 , LF(COLOR), 0, 0),
+    DEFINE_LED(6, 4, 5, 0 , LF(COLOR), 0, 0),
+    DEFINE_LED(9, 4, 5, 0 , LF(COLOR), 0, 0),
+    DEFINE_LED(7, 5, 5, 0 , LF(COLOR), 0, 0),
+    DEFINE_LED(7, 6, 5, 0 , LF(COLOR), 0, 0),
+    DEFINE_LED(7, 9, 5, 0 , LF(COLOR), 0, 0),
+	DEFINE_LED(7, 11, 5, 0 , LF(COLOR), 0, 0),
+};
+#endif
+
+#undef LD
+#undef LF
+#undef LO
 static int scaledThrottle;
 static int scaledAux;
 
@@ -1080,6 +1130,11 @@ void pgResetFn_specialColors(specialColorIndexes_t *instance)
 void applyDefaultLedStripConfig(ledConfig_t *ledConfigs)
 {
     memset(ledConfigs, 0, LED_MAX_STRIP_LENGTH * sizeof(ledConfig_t));
+
+		
+#if defined (RIOTLEDCONFIG)
+	memcpy(ledConfigs, &defaultLedStripConfig, sizeof(defaultLedStripConfig));
+#endif
 }
 
 void applyDefaultColors(hsvColor_t *colors)

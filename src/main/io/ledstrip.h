@@ -21,7 +21,11 @@
 #include "common/time.h"
 #include "drivers/io_types.h"
 
-#define LED_MAX_STRIP_LENGTH           32
+#if defined (LED_STRIP_LENGTH)
+	#define LED_MAX_STRIP_LENGTH     LED_STRIP_LENGTH      
+#else
+	#define LED_MAX_STRIP_LENGTH           32
+#endif
 #define LED_CONFIGURABLE_COLOR_COUNT   16
 #define LED_MODE_COUNT                  6
 #define LED_DIRECTION_COUNT             6
