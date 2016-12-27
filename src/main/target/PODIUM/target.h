@@ -85,6 +85,7 @@
 #define SPI3_MOSI_PIN           PC12
 
 #define LED_STRIP
+#define USE_DSHOT
 
 #define USE_ADC
 #define BOARD_HAS_VOLTAGE_DIVIDER
@@ -105,5 +106,12 @@
 #define TARGET_IO_PORTB 0xffff
 #define TARGET_IO_PORTC 0xffff
 
+// ver: 3.1.0.1.2
+#define USABLE_TIMER_CHANNEL_COUNT 12
+#define USED_TIMERS  ( TIM_N(2) | TIM_N(3) | TIM_N(5) | TIM_N(12) | TIM_N(8))
+
+/*
+// ver: 3.1.0.1.1
 #define USABLE_TIMER_CHANNEL_COUNT 11
 #define USED_TIMERS  ( TIM_N(2) | TIM_N(3) | TIM_N(5) | TIM_N(12) | TIM_N(8) | TIM_N(9))
+*/

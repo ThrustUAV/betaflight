@@ -16,4 +16,4 @@
  */
 
 #define FC_VERSION_THRUST_DEV_LEVEL_MAJOR 1 //increment when a significant change is made
-#define FC_VERSION_THRUST_DEV_LEVEL_MINOR 0 //increment when a bug is fixed
+#define FC_VERSION_THRUST_DEV_LEVEL_MINOR 2 //increment when a bug is fixed
