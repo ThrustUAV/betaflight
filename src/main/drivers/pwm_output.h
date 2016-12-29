@@ -88,7 +88,6 @@ typedef struct {
     volatile timCCR_t *ccr;
     TIM_TypeDef *tim;
     uint16_t period;
-    pwmWriteFuncPtr pwmWritePtr;
     bool enabled;
     IO_t io;
 } pwmOutputPort_t;
@@ -114,15 +113,4 @@ pwmOutputPort_t *pwmGetMotors(void);
 bool pwmIsSynced(void);
 void pwmDisableMotors(void);
 void pwmEnableMotors(void);
-
-#ifdef BRUSHED_ESC_AUTODETECT
-typedef enum {
-    MOTOR_UNKNOWN = 0,
-    MOTOR_BRUSHED,
-    MOTOR_BRUSHLESS
-} HardwareMotorTypes_e;
-
-extern uint8_t hardwareMotorType;
-
-void detectBrushedESC(void);
-#endif
+bool pwmAreMotorsEnabled(void);

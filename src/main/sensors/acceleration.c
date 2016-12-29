@@ -17,6 +17,7 @@
 
 #include <stdbool.h>
 #include <stdint.h>
+#include <string.h>
 #include <math.h>
 
 #include "platform.h"
@@ -50,9 +51,10 @@
 
 #include "io/beeper.h"
 
-#include "sensors/sensors.h"
 #include "sensors/acceleration.h"
 #include "sensors/boardalignment.h"
+#include "sensors/gyro.h"
+#include "sensors/sensors.h"
 
 #include "config/feature.h"
 
@@ -226,8 +228,15 @@ retry:
     return true;
 }
 
-void accInit(uint32_t gyroSamplingInverval)
+bool accInit(const accelerometerConfig_t *accelerometerConfig, uint32_t gyroSamplingInverval)
 {
+    memset(&acc, 0, sizeof(acc));
+    // copy over the common gyro mpu settings
+    acc.dev.mpuConfiguration = gyro.dev.mpuConfiguration;
+    acc.dev.mpuDetectionResult = gyro.dev.mpuDetectionResult;
+    if (!accDetect(&acc.dev, accelerometerConfig->acc_hardware)) {
+        return false;
+    }
     acc.dev.acc_1G = 256; // set default
     acc.dev.init(&acc.dev); // driver initialisation
     // set the acc sampling interval according to the gyro sampling interval
@@ -251,6 +260,7 @@ void accInit(uint32_t gyroSamplingInverval)
             biquadFilterInitLPF(&accFilter[axis], accLpfCutHz, acc.accSamplingInterval);
         }
     }
+    return true;
 }
 
 void accSetCalibrationCycles(uint16_t calibrationCyclesRequired)
@@ -371,17 +381,16 @@ static void applyAccelerationTrims(const flightDynamicsTrims_t *accelerationTrim
     acc.accSmooth[Z] -= accelerationTrims->raw[Z];
 }
 
-void updateAccelerationReadings(rollAndPitchTrims_t *rollAndPitchTrims)
+void accUpdate(rollAndPitchTrims_t *rollAndPitchTrims)
 {
-    int16_t accADCRaw[XYZ_AXIS_COUNT];
-
-    if (!acc.dev.read(accADCRaw)) {
+    if (!acc.dev.read(&acc.dev)) {
         return;
     }
+    acc.isAccelUpdatedAtLeastOnce = true;
 
     for (int axis = 0; axis < XYZ_AXIS_COUNT; axis++) {
-        DEBUG_SET(DEBUG_ACCELEROMETER, axis, accADCRaw[axis]);
-        acc.accSmooth[axis] = accADCRaw[axis];
+        DEBUG_SET(DEBUG_ACCELEROMETER, axis, acc.dev.ADCRaw[axis]);
+        acc.accSmooth[axis] = acc.dev.ADCRaw[axis];
     }
 
     if (accLpfCutHz) {
