@@ -61,6 +61,9 @@
 #define USE_UART3
 #define SERIAL_PORT_COUNT       4
 
+#define USE_ESCSERIAL
+#define ESCSERIAL_TIMER_TX_HARDWARE 0 // PWM 1
+
 #define UART1_TX_PIN            PB6
 #define UART1_RX_PIN            PB7
 
@@ -95,7 +98,6 @@
 #define RSSI_ADC_PIN            PB2
 
 #define LED_STRIP
-#define USE_DSHOT
 #define USE_ESC_SENSOR
 
 #define SPEKTRUM_BIND

@@ -69,6 +69,9 @@
 
 #define SERIAL_PORT_COUNT       4 // VCP, USART1, USART3, USART6
 
+#define USE_ESCSERIAL
+#define ESCSERIAL_TIMER_TX_HARDWARE 0 // PWM 1
+
 // *************** OSD *****************************
 #define USE_SPI_DEVICE_2
 #define SPI2_NSS_PIN            PB12
@@ -137,7 +140,6 @@
 
 #define USE_SERIAL_4WAY_BLHELI_INTERFACE
 
-#define USE_DSHOT
 #define USE_ESC_TELEMETRY
 
 #define TARGET_IO_PORTA         0xffff

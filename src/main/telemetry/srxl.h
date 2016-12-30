@@ -19,18 +19,6 @@
 
 #include "common/time.h"
 
-extern int16_t magHold;
-extern bool isRXDataNew;
-
-union rollAndPitchTrims_u;
-void applyAndSaveAccelerometerTrimsDelta(union rollAndPitchTrims_u *rollAndPitchTrimsDelta);
-void handleInflightCalibrationStickPosition();
-
-void mwDisarm(void);
-void mwArm(void);
-
-void processRx(timeUs_t currentTimeUs);
-void updateLEDs(void);
-void updateRcCommands(void);
-
-void taskMainPidLoop(timeUs_t currentTimeUs);
+void initSrxlTelemetry(void);
+bool checkSrxlTelemetryState(void);
+void handleSrxlTelemetry(timeUs_t currentTimeUs);

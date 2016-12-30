@@ -14,8 +14,16 @@
  * You should have received a copy of the GNU General Public License
  * along with Cleanflight.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 #pragma once
 
-void init_Gtune(pidProfile_t *pidProfileToTune);
-void calculate_Gtune(uint8_t axis);
+#ifdef BRUSHED_ESC_AUTODETECT
+typedef enum {
+    MOTOR_UNKNOWN = 0,
+    MOTOR_BRUSHED,
+    MOTOR_BRUSHLESS
+} HardwareMotorTypes_e;
+
+extern uint8_t hardwareMotorType;
+
+void detectBrushedESC(void);
+#endif

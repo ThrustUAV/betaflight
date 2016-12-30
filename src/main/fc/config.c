@@ -36,17 +36,19 @@
 #include "drivers/sensor.h"
 #include "drivers/accgyro.h"
 #include "drivers/compass.h"
+#include "drivers/io.h"
+#include "drivers/light_ws2811strip.h"
+#include "drivers/max7456.h"
+#include "drivers/pwm_esc_detect.h"
+#include "drivers/pwm_output.h"
+#include "drivers/rx_pwm.h"
+#include "drivers/rx_spi.h"
+#include "drivers/sdcard.h"
+#include "drivers/serial.h"
+#include "drivers/sound_beeper.h"
 #include "drivers/system.h"
 #include "drivers/timer.h"
-#include "drivers/pwm_rx.h"
-#include "drivers/rx_spi.h"
-#include "drivers/serial.h"
-#include "drivers/pwm_output.h"
 #include "drivers/vcd.h"
-#include "drivers/max7456.h"
-#include "drivers/sound_beeper.h"
-#include "drivers/light_ws2811strip.h"
-#include "drivers/sdcard.h"
 
 #include "fc/config.h"
 #include "fc/rc_controls.h"
@@ -166,34 +168,23 @@ static void resetPidProfile(pidProfile_t *pidProfile)
     pidProfile->yaw_p_limit = YAW_P_LIMIT_MAX;
     pidProfile->pidSumLimit = PIDSUM_LIMIT;
     pidProfile->yaw_lpf_hz = 0;
-    pidProfile->rollPitchItermIgnoreRate = 130;
-    pidProfile->yawItermIgnoreRate = 32;
+    pidProfile->rollPitchItermIgnoreRate = 200;
+    pidProfile->yawItermIgnoreRate = 55;
     pidProfile->dterm_filter_type = FILTER_BIQUAD;
     pidProfile->dterm_lpf_hz = 100;    // filtering ON by default
     pidProfile->dterm_notch_hz = 260;
     pidProfile->dterm_notch_cutoff = 160;
     pidProfile->vbatPidCompensation = 0;
     pidProfile->pidAtMinThrottle = PID_STABILISATION_ON;
+    pidProfile->max_angle_inclination = 70.0f;    // 70 degrees
 
     // Betaflight PID controller parameters
     pidProfile->setpointRelaxRatio = 30;
     pidProfile->dtermSetpointWeight = 200;
-    pidProfile->yawRateAccelLimit = 220;
-    pidProfile->rateAccelLimit = 0;
-    pidProfile->itermThrottleGain = 0;
+    pidProfile->yawRateAccelLimit = 20.0f;
+    pidProfile->rateAccelLimit = 0.0f;
+    pidProfile->itermThrottleThreshold = 350;
     pidProfile->levelSensitivity = 2.0f;
-
-#ifdef GTUNE
-    pidProfile->gtune_lolimP[ROLL] = 10;          // [0..200] Lower limit of ROLL P during G tune.
-    pidProfile->gtune_lolimP[PITCH] = 10;         // [0..200] Lower limit of PITCH P during G tune.
-    pidProfile->gtune_lolimP[YAW] = 10;           // [0..200] Lower limit of YAW P during G tune.
-    pidProfile->gtune_hilimP[ROLL] = 100;         // [0..200] Higher limit of ROLL P during G tune. 0 Disables tuning for that axis.
-    pidProfile->gtune_hilimP[PITCH] = 100;        // [0..200] Higher limit of PITCH P during G tune. 0 Disables tuning for that axis.
-    pidProfile->gtune_hilimP[YAW] = 100;          // [0..200] Higher limit of YAW P during G tune. 0 Disables tuning for that axis.
-    pidProfile->gtune_pwr = 0;                    // [0..10] Strength of adjustment
-    pidProfile->gtune_settle_time = 450;          // [200..1000] Settle time in ms
-    pidProfile->gtune_average_cycles = 16;        // [8..128] Number of looptime cycles used for gyro average calculation
-#endif
 }
 
 void resetProfile(profile_t *profile)
@@ -406,6 +397,7 @@ void resetFlight3DConfig(flight3DConfig_t *flight3DConfig)
 void resetTelemetryConfig(telemetryConfig_t *telemetryConfig)
 {
     telemetryConfig->telemetry_inversion = 1;
+    telemetryConfig->sportHalfDuplex = 1;
     telemetryConfig->telemetry_switch = 0;
     telemetryConfig->gpsNoFixLatitude = 0;
     telemetryConfig->gpsNoFixLongitude = 0;
@@ -613,13 +605,13 @@ void createDefaultConfig(master_t *config)
     config->gyroConfig.gyro_lpf = GYRO_LPF_256HZ;    // 256HZ default
 #ifdef STM32F10X
     config->gyroConfig.gyro_sync_denom = 8;
-    config->pid_process_denom = 1;
+    config->pidConfig.pid_process_denom = 1;
 #elif defined(USE_GYRO_SPI_MPU6000) || defined(USE_GYRO_SPI_MPU6500)  || defined(USE_GYRO_SPI_ICM20689)
     config->gyroConfig.gyro_sync_denom = 1;
-    config->pid_process_denom = 4;
+    config->pidConfig.pid_process_denom = 4;
 #else
     config->gyroConfig.gyro_sync_denom = 4;
-    config->pid_process_denom = 2;
+    config->pidConfig.pid_process_denom = 2;
 #endif
     config->gyroConfig.gyro_soft_lpf_type = FILTER_PT1;
     config->gyroConfig.gyro_soft_lpf_hz = 90;
@@ -640,7 +632,6 @@ void createDefaultConfig(master_t *config)
     config->boardAlignment.pitchDegrees = 0;
     config->boardAlignment.yawDegrees = 0;
     config->accelerometerConfig.acc_hardware = ACC_DEFAULT;     // default/autodetect
-    config->max_angle_inclination = 700;    // 70 degrees
     config->rcControlsConfig.yaw_control_direction = 1;
     config->gyroConfig.gyroMovementCalibrationThreshold = 32;
 
@@ -709,7 +700,9 @@ void createDefaultConfig(master_t *config)
 
     resetAllRxChannelRangeConfigurations(config->rxConfig.channelRanges);
 
-    config->inputFilteringMode = INPUT_FILTERING_DISABLED;
+#ifdef USE_PWM
+    config->pwmConfig.inputFilteringMode = INPUT_FILTERING_DISABLED;
+#endif
 
     config->armingConfig.gyro_cal_on_first_arm = 0;  // TODO - Cleanup retarded arm support
     config->armingConfig.disarm_kill_switch = 1;
@@ -743,7 +736,7 @@ void createDefaultConfig(master_t *config)
 
     resetProfile(&config->profile[0]);
 
-    resetRollAndPitchTrims(&config->accelerometerTrims);
+    resetRollAndPitchTrims(&config->accelerometerConfig.accelerometerTrims);
 
     config->compassConfig.mag_declination = 0;
     config->accelerometerConfig.acc_lpf_hz = 10.0f;
@@ -779,13 +772,13 @@ void createDefaultConfig(master_t *config)
 #ifdef USE_SERVOS
     // servos
     for (int i = 0; i < MAX_SUPPORTED_SERVOS; i++) {
-        config->servoConf[i].min = DEFAULT_SERVO_MIN;
-        config->servoConf[i].max = DEFAULT_SERVO_MAX;
-        config->servoConf[i].middle = DEFAULT_SERVO_MIDDLE;
-        config->servoConf[i].rate = 100;
-        config->servoConf[i].angleAtMin = DEFAULT_SERVO_MIN_ANGLE;
-        config->servoConf[i].angleAtMax = DEFAULT_SERVO_MAX_ANGLE;
-        config->servoConf[i].forwardFromChannel = CHANNEL_FORWARDING_DISABLED;
+        config->servoProfile.servoConf[i].min = DEFAULT_SERVO_MIN;
+        config->servoProfile.servoConf[i].max = DEFAULT_SERVO_MAX;
+        config->servoProfile.servoConf[i].middle = DEFAULT_SERVO_MIDDLE;
+        config->servoProfile.servoConf[i].rate = 100;
+        config->servoProfile.servoConf[i].angleAtMin = DEFAULT_SERVO_MIN_ANGLE;
+        config->servoProfile.servoConf[i].angleAtMax = DEFAULT_SERVO_MAX_ANGLE;
+        config->servoProfile.servoConf[i].forwardFromChannel = CHANNEL_FORWARDING_DISABLED;
     }
 
     // gimbal
@@ -878,7 +871,7 @@ void activateConfig(void)
     resetAdjustmentStates();
 
     useRcControlsConfig(
-        masterConfig.modeActivationConditions,
+        modeActivationProfile()->modeActivationConditions,
         &masterConfig.motorConfig,
         &currentProfile->pidProfile
     );
@@ -905,7 +898,7 @@ void activateConfig(void)
     );
 
 #ifdef USE_SERVOS
-    servoUseConfigs(&masterConfig.servoMixerConfig, masterConfig.servoConf, &masterConfig.gimbalConfig);
+    servoUseConfigs(&masterConfig.servoMixerConfig, masterConfig.servoProfile.servoConf, &masterConfig.gimbalConfig);
 #endif
 
 
@@ -1050,7 +1043,7 @@ void validateAndFixGyroConfig(void)
     }
 
     if (gyroConfig()->gyro_lpf != GYRO_LPF_256HZ && gyroConfig()->gyro_lpf != GYRO_LPF_NONE) {
-        masterConfig.pid_process_denom = 1; // When gyro set to 1khz always set pid speed 1:1 to sampling speed
+        pidConfig()->pid_process_denom = 1; // When gyro set to 1khz always set pid speed 1:1 to sampling speed
         gyroConfig()->gyro_sync_denom = 1;
     }
 }
@@ -1079,6 +1072,9 @@ void saveConfigAndNotify(void)
 
 void changeProfile(uint8_t profileIndex)
 {
+    if (profileIndex >= MAX_PROFILE_COUNT) {
+        profileIndex = MAX_PROFILE_COUNT - 1;
+    }
     masterConfig.current_profile_index = profileIndex;
     writeEEPROM();
     readEEPROM();

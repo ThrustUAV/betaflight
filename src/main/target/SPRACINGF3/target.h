@@ -55,10 +55,10 @@
 #define USE_BARO_MS5611
 #define USE_BARO_BMP085
 
-//#define MAG
-//#define USE_MAG_AK8975
-//#define USE_MAG_HMC5883
-//#define MAG_HMC5883_ALIGN       CW270_DEG
+#define MAG
+#define USE_MAG_AK8975
+#define USE_MAG_HMC5883
+#define MAG_HMC5883_ALIGN       CW270_DEG
 
 #define USE_MAG_DATA_READY_SIGNAL
 #define ENSURE_MAG_DATA_READY_IS_HIGH
@@ -116,7 +116,6 @@
 #define CURRENT_METER_ADC_PIN   PA5
 #define RSSI_ADC_PIN            PB2
 
-#define USE_DSHOT
 #define USE_ESC_SENSOR
 #define REMAP_TIM17_DMA
 
