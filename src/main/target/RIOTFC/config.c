@@ -39,7 +39,7 @@ void targetConfiguration(master_t *config)
 	config->batteryConfig.currentMeterScale = 403;
 	
 	// PID Configuration set to 8KHz
-	config->pid_process_denom = 1;
+	config->pidConfig.pid_process_denom = 1;
 	
 	
 	// PID Profiile Configurations
