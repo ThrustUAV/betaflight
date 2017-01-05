@@ -29,6 +29,10 @@ void targetConfiguration(master_t *config)
 	// 3 = PWM_TYPE_MULTISHOT
 	config->motorConfig.motorPwmProtocol = 3;
 	
+	//Smartport Configurations
+	config->telemetryConfig.telemetry_inversion = 0;
+    config->telemetryConfig.sportHalfDuplex = 0;
+	
 	// Motor Board Allignment Configurations
     config->boardAlignment.rollDegrees = 0;
 	config->boardAlignment.pitchDegrees = 180;
