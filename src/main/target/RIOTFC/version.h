@@ -17,3 +17,23 @@
 
 #define FC_VERSION_THRUST_DEV_LEVEL_MAJOR 0 //increment when a significant change is made
 #define FC_VERSION_THRUST_DEV_LEVEL_MINOR 3 //increment when a bug is fixed
+
+/* Version Log
+
+
+Version 0.3
+Restructuring Codebase away from haseebnain
+
+- Updated GYRO/ACCL allignments
+-- Yaw ->270
+-- Pitch -> 180
+-- Removed board allignment from Target.h
+- Include defines for custom LEDs
+- Timer defines updated in Target.c
+- Moved over presets from local version of Betaflight(V10)
+- Motor preset for MULTISHOT
+- Battery scaling adjusted
+-- Voltage scale --> 53
+-- Current scale --> 403
+- PID has been set to 8kHz
+- PID profile has been updated to include preset tune (Conrad Tune)
