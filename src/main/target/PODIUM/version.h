@@ -16,4 +16,13 @@
  */
 
 #define FC_VERSION_THRUST_DEV_LEVEL_MAJOR 1 //increment when a significant change is made
-#define FC_VERSION_THRUST_DEV_LEVEL_MINOR 0 //increment when a bug is fixed
+#define FC_VERSION_THRUST_DEV_LEVEL_MINOR 3 //increment when a bug is fixed
+
+/*Version Log */
+/*
+
+Version 1.3
+
+Updated repo with Betaflight (12/29/2016)
+
+*/
