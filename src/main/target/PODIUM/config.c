@@ -26,10 +26,13 @@
 void targetConfiguration(master_t *config)
 {
         
-        config->boardAlignment.rollDegrees = 180;
+        // Board Allignment
+		config->boardAlignment.rollDegrees = 180;
 		config->boardAlignment.pitchDegrees = 0;
 		config->boardAlignment.yawDegrees = 180;
 		
-		
+		//Smartport Configurations
+		config->telemetryConfig.telemetry_inversion = 0;
+		config->telemetryConfig.sportHalfDuplex = 0;
     
 }
