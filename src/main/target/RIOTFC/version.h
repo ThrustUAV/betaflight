@@ -16,9 +16,14 @@
  */
 
 #define FC_VERSION_THRUST_DEV_LEVEL_MAJOR 0 //increment when a significant change is made
-#define FC_VERSION_THRUST_DEV_LEVEL_MINOR 4 //increment when a bug is fixed
+#define FC_VERSION_THRUST_DEV_LEVEL_MINOR 5 //increment when a bug is fixed
 
 /* Version Log
+Version 0.5
+TESTING OSD Performance
+DMA disabled
+ 
+
 Version 0.4
 Smartport Implementation
 - Set defaults for smartport configuration
