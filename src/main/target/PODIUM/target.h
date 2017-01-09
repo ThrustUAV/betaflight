@@ -26,38 +26,39 @@
 	#define USBD_SERIALNUMBER_STRING "0x8020000"
 #endif
 
+// LED Pin Definitions
 #define LED0                    PB5
 #define LED1                    PB4
 #define LED2                    PB6
 
+// Inverter Pin Definition
 #define INVERTER                PC0
 #define INVERTER_USART          USART1
 
+// ICM-20608G Definitions
 #define MPU6500_CS_PIN          PA4
 #define MPU6500_SPI_INSTANCE    SPI1
 
 #define ACC
 #define USE_ACC_SPI_MPU6500
-//#define ACC_MPU6500_ALIGN       CW270_DEG
 
 #define GYRO
 #define USE_GYRO_SPI_MPU6500
-//#define GYRO_MPU6500_ALIGN      CW270_DEG
 
- 
+// Memory Pin definitions
 #define M25P16_CS_PIN           PB3
 #define M25P16_SPI_INSTANCE     SPI3
 
 
-
+// VCP Pin Definition
 #define USE_VCP
 #define VBUS_SENSING_PIN        PA8
 
+// UART Pin Definitions
 #define USE_UART1
 #define UART1_RX_PIN            PA10
 #define UART1_TX_PIN            PA9
 #define UART1_AHB1_PERIPHERALS  RCC_AHB1Periph_DMA2
-
 
 #define USE_UART3
 #define UART3_RX_PIN            PB11
@@ -65,25 +66,29 @@
 
 #define USE_UART6
 #define UART6_RX_PIN            PC7
-#define UART6_TX_PIN            PC6 //inverter
+#define UART6_TX_PIN            PC6 
 
 #define SERIAL_PORT_COUNT 4
 
+// SPI Definitions
 #define USE_SPI
 
-#define USE_SPI_DEVICE_1 //GYRO
+// SPI GYRO Pin Definitions
+#define USE_SPI_DEVICE_1 
 #define SPI1_NSS_PIN            PA4
 #define SPI1_SCK_PIN            PA5
 #define SPI1_MISO_PIN           PA6
 #define SPI1_MOSI_PIN           PA7
 
 
-#define USE_SPI_DEVICE_3 //FLASH
+// SPI FLASH Pin Definitions
+#define USE_SPI_DEVICE_3 
 #define SPI3_NSS_PIN            PB3
 #define SPI3_SCK_PIN            PC10
 #define SPI3_MISO_PIN           PC11
 #define SPI3_MOSI_PIN           PC12
 
+// Feature Definitions
 #define LED_STRIP
 #define USE_DSHOT
 
@@ -105,6 +110,8 @@
 #define TARGET_IO_PORTA 0xffff
 #define TARGET_IO_PORTB 0xffff
 #define TARGET_IO_PORTC 0xffff
+
+// Timer Definitions
 
 // ver: 3.1.0.1.2
 #define USABLE_TIMER_CHANNEL_COUNT 12
