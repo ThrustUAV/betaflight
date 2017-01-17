@@ -17,10 +17,9 @@
 
 #pragma once
 
-#define EEPROM_CONF_VERSION 147
+#define EEPROM_CONF_VERSION 151
 
 void initEEPROM(void);
 void writeEEPROM();
 void readEEPROM(void);
 bool isEEPROMContentValid(void);
-

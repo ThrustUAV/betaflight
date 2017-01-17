@@ -322,14 +322,14 @@ void freeSmartPortTelemetryPort(void)
 
 void configureSmartPortTelemetryPort(void)
 {
-    portOptions_t portOptions;
-
     if (!portConfig) {
         return;
     }
 
+    portOptions_t portOptions = 0;
+    
     if (telemetryConfig->sportHalfDuplex) {
-        portOptions = SERIAL_BIDIR;
+        portOptions |= SERIAL_BIDIR;
     }
     
     if (telemetryConfig->telemetry_inversion) {
@@ -639,9 +639,9 @@ void handleSmartPortTelemetry(void)
                 if (feature(FEATURE_VBAT) && batteryCellCount > 0) {
                     uint16_t vfasVoltage;
                     if (telemetryConfig->frsky_vfas_cell_voltage) {
-                        vfasVoltage = vbat / batteryCellCount;
+                        vfasVoltage = getVbat() / batteryCellCount;
                     } else {
-                        vfasVoltage = vbat;
+                        vfasVoltage = getVbat();
                     }
                     smartPortSendPackage(id, vfasVoltage * 10); // given in 0.1V, convert to volts
                     smartPortHasRequest = 0;
@@ -810,7 +810,7 @@ void handleSmartPortTelemetry(void)
 #endif
             case FSSP_DATAID_A4         :
                 if (feature(FEATURE_VBAT) && batteryCellCount > 0) {
-                    smartPortSendPackage(id, vbat * 10 / batteryCellCount ); // given in 0.1V, convert to volts
+                    smartPortSendPackage(id, getVbat() * 10 / batteryCellCount ); // given in 0.1V, convert to volts
                     smartPortHasRequest = 0;
                 }
                 break;

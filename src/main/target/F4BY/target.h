@@ -28,8 +28,7 @@
 
 #define BEEPER                  PE5
 
-#define INVERTER                PD3
-#define INVERTER_USART          USART6
+#define INVERTER_PIN_USART6     PD3
 
 
 
@@ -102,6 +101,9 @@
 #define UART6_TX_PIN            PC6
 
 #define SERIAL_PORT_COUNT       6 //VCP, UART1, UART2, UART3, UART4, UART5, UART6
+
+#define USE_ESCSERIAL
+#define ESCSERIAL_TIMER_TX_HARDWARE 8 // PWM 9
 
 #define USE_SPI
 #define USE_SPI_DEVICE_1
