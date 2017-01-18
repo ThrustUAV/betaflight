@@ -88,6 +88,7 @@
 
 #define BARO
 #define USE_BARO_MS5611
+#define MS5611_I2C_INSTANCE I2CDEV_1
 //#define USE_BARO_BMP280
 
 #define M25P16_CS_PIN           PB3
@@ -165,6 +166,9 @@
 #define USE_I2C
 #define I2C_DEVICE              (I2CDEV_1)
 //#define I2C_DEVICE_EXT          (I2CDEV_2)
+
+#define I2C1_SCL                PB8
+#define I2C1_SDA                PB9
 
 #define USE_ADC
 #define VBAT_SCALE_DEFAULT      53 

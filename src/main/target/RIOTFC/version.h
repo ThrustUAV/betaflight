@@ -16,9 +16,13 @@
  */
 
 #define FC_VERSION_THRUST_DEV_LEVEL_MAJOR 0 //increment when a significant change is made
-#define FC_VERSION_THRUST_DEV_LEVEL_MINOR 6 //increment when a bug is fixed
+#define FC_VERSION_THRUST_DEV_LEVEL_MINOR 7 //increment when a bug is fixed
 
 /* Version Log
+Version 0.7
+Barometer Inclusion
+ -Updated defines to include barometer support.
+
 Version 0.6
 Betaflight Update
  -Code update (1/09/2016)
