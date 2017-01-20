@@ -16,9 +16,13 @@
  */
 
 #define FC_VERSION_THRUST_DEV_LEVEL_MAJOR 0 //increment when a significant change is made
-#define FC_VERSION_THRUST_DEV_LEVEL_MINOR 7 //increment when a bug is fixed
+#define FC_VERSION_THRUST_DEV_LEVEL_MINOR 8 //increment when a bug is fixed
 
 /* Version Log
+Version 0.8
+Updated Defaults
+ -Updated initial port defines
+
 Version 0.7
 Barometer Inclusion
  -Updated defines to include barometer support.
