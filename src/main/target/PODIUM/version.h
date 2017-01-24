@@ -16,12 +16,17 @@
  */
 
 #define FC_VERSION_THRUST_DEV_LEVEL_MAJOR 1 //increment when a significant change is made
-#define FC_VERSION_THRUST_DEV_LEVEL_MINOR 4 //increment when a bug is fixed
+#define FC_VERSION_THRUST_DEV_LEVEL_MINOR 5 //increment when a bug is fixed
 
 
 /* Version Log
+Version 1.5
+Blackbox Update
+ -Introduced Blackbox to the target
+
 Version 1.4
 Betaflight Update
+ -Code update (1/23/2017)
  -Code update (1/09/2016)
  -DSHOT1200 Introduction
 

@@ -73,6 +73,26 @@
 // SPI Definitions
 #define USE_SPI
 
+
+// SD CARD
+#define USE_SDCARD
+
+#define ENABLE_BLACKBOX_LOGGING_ON_SDCARD_BY_DEFAULT
+#define USE_SDCARD_SPI3
+
+#define SDCARD_SPI_INSTANCE                 SPI3
+#define SDCARD_SPI_CS_PIN                   PB3
+
+// SPI3 is on the APB1 bus whose clock runs at 42MHz. Divide to under 400kHz for init:
+#define SDCARD_SPI_INITIALIZATION_CLOCK_DIVIDER 128 // 328kHz
+// Divide to under 25MHz for normal operation:
+#define SDCARD_SPI_FULL_SPEED_CLOCK_DIVIDER     2 // 21MHz
+
+#define SDCARD_DMA_CHANNEL_TX               DMA1_Stream5
+#define SDCARD_DMA_CHANNEL_TX_COMPLETE_FLAG DMA_FLAG_TCIF5
+#define SDCARD_DMA_CLK                      RCC_AHB1Periph_DMA1
+#define SDCARD_DMA_CHANNEL                  DMA_Channel_0
+
 // SPI GYRO Pin Definitions
 #define USE_SPI_DEVICE_1 
 #define SPI1_NSS_PIN            PA4
@@ -90,7 +110,7 @@
 
 // Feature Definitions
 #define LED_STRIP
-#define USE_DSHOT
+//#define USE_DSHOT
 
 #define USE_ADC
 #define BOARD_HAS_VOLTAGE_DIVIDER
