@@ -15,27 +15,38 @@
  * along with Cleanflight.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#pragma once
+#include <stdbool.h>
+#include <stdint.h>
+
+#include <platform.h>
+
+#include "common/utils.h"
+
+#include "drivers/io.h"
 
 #include "fc/rc_controls.h"
 
-#define VTX_BAND_MIN                            1
-#define VTX_BAND_MAX                            5
-#define VTX_CHANNEL_MIN                         1
-#define VTX_CHANNEL_MAX                         8
-#define MAX_CHANNEL_ACTIVATION_CONDITION_COUNT  10
+#include "flight/failsafe.h"
+#include "flight/mixer.h"
+#include "flight/pid.h"
 
-typedef struct vtxChannelActivationCondition_s {
-    uint8_t auxChannelIndex;
-    uint8_t band;
-    uint8_t channel;
-    channelRange_t range;
-} vtxChannelActivationCondition_t;
+#include "rx/rx.h"
 
-void vtxSingularityInit(void);
-void vtxSingularityIncrementBand(void);
-void vtxSingularityDecrementBand(void);
-void vtxSingularityIncrementChannel(void);
-void vtxSingularityDecrementChannel(void);
-void vtxSingularityUpdateActivatedChannel(void);
+#include "config/config_profile.h"
+#include "config/config_master.h"
+
+#include "sensors/boardalignment.h"
+
+
+void targetConfiguration(master_t *config)
+{
+    UNUSED(config);
+
+#ifdef KISSCC
+    // alternative defaults settings for Beebrain target
+    config->boardAlignment.rollDegrees = 180;
+    config->boardAlignment.pitchDegrees = 0;
+    config->boardAlignment.yawDegrees = 0;
+#endif
+}
 

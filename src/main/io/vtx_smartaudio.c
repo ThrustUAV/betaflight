@@ -19,32 +19,36 @@
 
 #include <stdbool.h>
 #include <stdint.h>
+#include <string.h>
 #include <ctype.h>
 
 #include "platform.h"
 
 #if defined(VTX_SMARTAUDIO) && defined(VTX_CONTROL)
 
+#include "build/build_config.h"
+
 #include "cms/cms.h"
 #include "cms/cms_types.h"
 
-#include "string.h"
 #include "common/printf.h"
 #include "common/utils.h"
+
+#include "config/parameter_group.h"
+#include "config/parameter_group_ids.h"
+
 #include "drivers/system.h"
 #include "drivers/serial.h"
 #include "drivers/vtx_common.h"
-#include "io/serial.h"
-#include "io/vtx_smartaudio.h"
-#include "io/vtx_string.h"
 
 #include "fc/rc_controls.h"
 #include "fc/runtime_config.h"
 
 #include "flight/pid.h"
-#include "config/config_master.h"
 
-#include "build/build_config.h"
+#include "io/serial.h"
+#include "io/vtx_smartaudio.h"
+#include "io/vtx_string.h"
 
 //#define SMARTAUDIO_DPRINTF
 //#define SMARTAUDIO_DEBUG_MONITOR
@@ -118,7 +122,7 @@ enum {
 
 // opmode flags, SET side
 #define SA_MODE_SET_IN_RANGE_PITMODE        1 // Immediate
-#define SA_MODE_SET_OUT_RANGE_PITMODE	    2 // Immediate
+#define SA_MODE_SET_OUT_RANGE_PITMODE        2 // Immediate
 #define SA_MODE_CLR_PITMODE                 4 // Immediate
 #define SA_MODE_SET_UNLOCK                  8
 #define SA_MODE_SET_LOCK                    0 // ~UNLOCK
