@@ -30,6 +30,9 @@
 
 #include "common/axis.h"
 
+#include "config/parameter_group.h"
+#include "config/parameter_group_ids.h"
+
 #include "drivers/system.h"
 
 #include "sensors/sensors.h"
@@ -65,7 +68,6 @@ float fc_acc;
 float smallAngleCosZ = 0;
 
 float magneticDeclination = 0.0f;       // calculated at startup from config
-static bool isAccelUpdatedAtLeastOnce = false;
 
 static imuRuntimeConfig_t imuRuntimeConfig;
 static pidProfile_t *pidProfile;
@@ -406,17 +408,9 @@ static void imuCalculateEstimatedAttitude(timeUs_t currentTimeUs)
     imuCalculateAcceleration(deltaT); // rotate acc vector into earth frame
 }
 
-void imuUpdateAccelerometer(rollAndPitchTrims_t *accelerometerTrims)
-{
-    if (sensors(SENSOR_ACC)) {
-        updateAccelerationReadings(accelerometerTrims);
-        isAccelUpdatedAtLeastOnce = true;
-    }
-}
-
 void imuUpdateAttitude(timeUs_t currentTimeUs)
 {
-    if (sensors(SENSOR_ACC) && isAccelUpdatedAtLeastOnce) {
+    if (sensors(SENSOR_ACC) && acc.isAccelUpdatedAtLeastOnce) {
         imuCalculateEstimatedAttitude(currentTimeUs);
     } else {
         acc.accSmooth[X] = 0;

@@ -19,8 +19,11 @@
 
 #include <stdbool.h>
 
+#include "config/parameter_group.h"
+
 #define PID_CONTROLLER_BETAFLIGHT 1
-#define PID_MIXER_SCALING 900.0f
+#define PID_MIXER_SCALING 1000.0f
+#define PID_SERVO_MIXER_SCALING 0.7f
 #define YAW_P_LIMIT_MIN 100                 // Maximum value for yaw P limiter
 #define YAW_P_LIMIT_MAX 500                 // Maximum value for yaw P limiter
 #define PIDSUM_LIMIT 0.5f
@@ -65,34 +68,33 @@ typedef struct pidProfile_s {
     uint16_t yaw_lpf_hz;                    // Additional yaw filter when yaw axis too noisy
     uint16_t dterm_notch_hz;                // Biquad dterm notch hz
     uint16_t dterm_notch_cutoff;            // Biquad dterm notch low cutoff
-    uint16_t rollPitchItermIgnoreRate;      // Experimental threshold for resetting iterm for pitch and roll on certain rates
-    uint16_t yawItermIgnoreRate;            // Experimental threshold for resetting iterm for yaw on certain rates
+    uint8_t itermWindupPointPercent;        // Experimental ITerm windup threshold, percent motor saturation
     uint16_t yaw_p_limit;
     float pidSumLimit;
     uint8_t dterm_average_count;            // Configurable delta count for dterm
     uint8_t vbatPidCompensation;            // Scale PIDsum to battery voltage
     uint8_t pidAtMinThrottle;               // Disable/Enable pids on zero throttle. Normally even without airmode P and D would be active.
+    uint8_t levelAngleLimit;                // Max angle in degrees in level mode
+    uint8_t levelSensitivity;               // Angle mode sensitivity reflected in degrees assuming user using full stick
 
     // Betaflight PID controller parameters
-    uint8_t itermThrottleGain;              // Throttle coupling to iterm. Quick throttle changes will bump iterm
+    uint16_t itermThrottleThreshold;        // max allowed throttle delta before iterm accelerated in ms
+    float itermAcceleratorGain;             // Iterm Accelerator Gain when itermThrottlethreshold is hit
+    uint16_t itermAcceleratorRateLimit;     // Setpointrate limit for iterm accelerator to operate within
     uint8_t setpointRelaxRatio;             // Setpoint weight relaxation effect
     uint8_t dtermSetpointWeight;            // Setpoint weight for Dterm (0= measurement, 1= full error, 1 > agressive derivative)
-    uint16_t yawRateAccelLimit;             // yaw accel limiter for deg/sec/ms
-    uint16_t rateAccelLimit;                // accel limiter roll/pitch deg/sec/ms
-    float levelSensitivity;
-
-#ifdef GTUNE
-    uint8_t  gtune_lolimP[3];               // [0..200] Lower limit of P during G tune
-    uint8_t  gtune_hilimP[3];               // [0..200] Higher limit of P during G tune. 0 Disables tuning for that axis.
-    uint8_t  gtune_pwr;                     // [0..10] Strength of adjustment
-    uint16_t gtune_settle_time;             // [200..1000] Settle time in ms
-    uint8_t  gtune_average_cycles;          // [8..128] Number of looptime cycles used for gyro average calculation
-#endif
+    float yawRateAccelLimit;                // yaw accel limiter for deg/sec/ms
+    float rateAccelLimit;                   // accel limiter roll/pitch deg/sec/ms
 } pidProfile_t;
 
+PG_DECLARE_PROFILE(pidProfile_t, pidProfile);
+
+typedef struct pidConfig_s {
+    uint8_t pid_process_denom;              // Processing denominator for PID controller vs gyro sampling rate
+} pidConfig_t;
+
 union rollAndPitchTrims_u;
-void pidController(const pidProfile_t *pidProfile, uint16_t max_angle_inclination,
-        const union rollAndPitchTrims_u *angleTrim, uint16_t midrc);
+void pidController(const pidProfile_t *pidProfile, const union rollAndPitchTrims_u *angleTrim);
 
 extern float axisPIDf[3];
 extern int32_t axisPID_P[3], axisPID_I[3], axisPID_D[3];
@@ -105,6 +107,7 @@ extern uint8_t PIDweight[3];
 void pidResetErrorGyroState(void);
 void pidStabilisationState(pidStabilisationState_e pidControllerState);
 void pidSetTargetLooptime(uint32_t pidLooptime);
+void pidSetItermAccelerator(float newItermAccelerator);
 void pidInitFilters(const pidProfile_t *pidProfile);
 void pidInitConfig(const pidProfile_t *pidProfile);
 

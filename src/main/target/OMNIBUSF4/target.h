@@ -35,19 +35,24 @@
 #define BEEPER                  PB4
 #define BEEPER_INVERTED
 
-#define INVERTER                PC0 // PC0 used as inverter select GPIO
-#define INVERTER_USART          USART1
+#define INVERTER_PIN_USART1     PC0 // PC0 used as inverter select GPIO
 
 #define MPU6000_CS_PIN          PA4
 #define MPU6000_SPI_INSTANCE    SPI1
 
 #define ACC
 #define USE_ACC_SPI_MPU6000
-#define GYRO_MPU6000_ALIGN      CW180_DEG
 
 #define GYRO
 #define USE_GYRO_SPI_MPU6000
-#define ACC_MPU6000_ALIGN       CW180_DEG
+
+#ifdef OMNIBUSF4SD
+  #define GYRO_MPU6000_ALIGN      CW270_DEG
+  #define ACC_MPU6000_ALIGN       CW270_DEG
+#else
+  #define GYRO_MPU6000_ALIGN      CW180_DEG
+  #define ACC_MPU6000_ALIGN       CW180_DEG
+#endif
 
 // MPU6000 interrupts
 #define USE_EXTI
@@ -155,7 +160,6 @@
 #define VBAT_ADC_PIN            PC2
 //#define RSSI_ADC_PIN            PA0
 
-#define USE_DSHOT
 #define USE_ESC_SENSOR
 
 #define LED_STRIP
@@ -169,10 +173,10 @@
 
 #define USE_SERIAL_4WAY_BLHELI_INTERFACE
 
-#define TARGET_IO_PORTA 0xffff
-#define TARGET_IO_PORTB 0xffff
-#define TARGET_IO_PORTC 0xffff
-#define TARGET_IO_PORTD 0xffff
+#define TARGET_IO_PORTA (0xffff & ~(BIT(14)|BIT(13)))
+#define TARGET_IO_PORTB (0xffff & ~(BIT(2)))
+#define TARGET_IO_PORTC (0xffff & ~(BIT(15)|BIT(14)|BIT(13)))
+#define TARGET_IO_PORTD BIT(2)
 
 #define USABLE_TIMER_CHANNEL_COUNT 12
 #define USED_TIMERS  ( TIM_N(1) | TIM_N(2) | TIM_N(3) | TIM_N(4) | TIM_N(5) | TIM_N(12) | TIM_N(8) | TIM_N(9))

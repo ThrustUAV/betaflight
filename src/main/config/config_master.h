@@ -26,13 +26,14 @@
 #include "cms/cms.h"
 
 #include "drivers/adc.h"
-#include "drivers/pwm_rx.h"
+#include "drivers/rx_pwm.h"
 #include "drivers/sound_beeper.h"
 #include "drivers/sonar_hcsr04.h"
 #include "drivers/sdcard.h"
 #include "drivers/vcd.h"
 #include "drivers/light_led.h"
 #include "drivers/flash.h"
+#include "drivers/display.h"
 
 #include "fc/rc_controls.h"
 
@@ -41,10 +42,10 @@
 #include "flight/servos.h"
 #include "flight/imu.h"
 #include "flight/navigation.h"
+#include "flight/pid.h"
 
 #include "io/serial.h"
 #include "io/gimbal.h"
-#include "io/motors.h"
 #include "io/servos.h"
 #include "io/gps.h"
 #include "io/osd.h"
@@ -63,6 +64,7 @@
 #include "sensors/battery.h"
 #include "sensors/compass.h"
 
+#ifndef USE_PARAMETER_GROUPS
 #define motorConfig(x) (&masterConfig.motorConfig)
 #define flight3DConfig(x) (&masterConfig.flight3DConfig)
 #define servoConfig(x) (&masterConfig.servoConfig)
@@ -86,6 +88,7 @@
 #define failsafeConfig(x) (&masterConfig.failsafeConfig)
 #define serialConfig(x) (&masterConfig.serialConfig)
 #define telemetryConfig(x) (&masterConfig.telemetryConfig)
+#define ibusTelemetryConfig(x) (&masterConfig.telemetryConfig)
 #define ppmConfig(x) (&masterConfig.ppmConfig)
 #define pwmConfig(x) (&masterConfig.pwmConfig)
 #define adcConfig(x) (&masterConfig.adcConfig)
@@ -98,7 +101,75 @@
 #define sdcardConfig(x) (&masterConfig.sdcardConfig)
 #define blackboxConfig(x) (&masterConfig.blackboxConfig)
 #define flashConfig(x) (&masterConfig.flashConfig)
+#define pidConfig(x) (&masterConfig.pidConfig)
+#define adjustmentProfile(x) (&masterConfig.adjustmentProfile)
+#define modeActivationProfile(x) (&masterConfig.modeActivationProfile)
+#define servoProfile(x) (&masterConfig.servoProfile)
+#define customMotorMixer(i) (&masterConfig.customMotorMixer[i])
+#define customServoMixers(i) (&masterConfig.customServoMixer[i])
+#define displayPortProfileMsp(x) (&masterConfig.displayPortProfileMsp)
+#define displayPortProfileMax7456(x) (&masterConfig.displayPortProfileMax7456)
+#define displayPortProfileOled(x) (&masterConfig.displayPortProfileOled)
 
+
+#define motorConfigMutable(x) (&masterConfig.motorConfig)
+#define flight3DConfigMutable(x) (&masterConfig.flight3DConfig)
+#define servoConfigMutable(x) (&masterConfig.servoConfig)
+#define servoMixerConfigMutable(x) (&masterConfig.servoMixerConfig)
+#define gimbalConfigMutable(x) (&masterConfig.gimbalConfig)
+#define boardAlignmentMutable(x) (&masterConfig.boardAlignment)
+#define imuConfigMutable(x) (&masterConfig.imuConfig)
+#define gyroConfigMutable(x) (&masterConfig.gyroConfig)
+#define compassConfigMutable(x) (&masterConfig.compassConfig)
+#define accelerometerConfigMutable(x) (&masterConfig.accelerometerConfig)
+#define barometerConfigMutable(x) (&masterConfig.barometerConfig)
+#define throttleCorrectionConfigMutable(x) (&masterConfig.throttleCorrectionConfig)
+#define batteryConfigMutable(x) (&masterConfig.batteryConfig)
+#define rcControlsConfigMutable(x) (&masterConfig.rcControlsConfig)
+#define gpsProfileMutable(x) (&masterConfig.gpsProfile)
+#define gpsConfigMutable(x) (&masterConfig.gpsConfig)
+#define rxConfigMutable(x) (&masterConfig.rxConfig)
+#define armingConfigMutable(x) (&masterConfig.armingConfig)
+#define mixerConfigMutable(x) (&masterConfig.mixerConfig)
+#define airplaneConfigMutable(x) (&masterConfig.airplaneConfig)
+#define failsafeConfigMutable(x) (&masterConfig.failsafeConfig)
+#define serialConfigMutable(x) (&masterConfig.serialConfig)
+#define telemetryConfigMutable(x) (&masterConfig.telemetryConfig)
+#define ibusTelemetryConfigMutable(x) (&masterConfig.telemetryConfig)
+#define ppmConfigMutable(x) (&masterConfig.ppmConfig)
+#define pwmConfigMutable(x) (&masterConfig.pwmConfig)
+#define adcConfigMutable(x) (&masterConfig.adcConfig)
+#define beeperConfigMutable(x) (&masterConfig.beeperConfig)
+#define sonarConfigMutable(x) (&masterConfig.sonarConfig)
+#define ledStripConfigMutable(x) (&masterConfig.ledStripConfig)
+#define statusLedConfigMutable(x) (&masterConfig.statusLedConfig)
+#define osdProfileMutable(x) (&masterConfig.osdProfile)
+#define vcdProfileMutable(x) (&masterConfig.vcdProfile)
+#define sdcardConfigMutable(x) (&masterConfig.sdcardConfig)
+#define blackboxConfigMutable(x) (&masterConfig.blackboxConfig)
+#define flashConfigMutable(x) (&masterConfig.flashConfig)
+#define pidConfigMutable(x) (&masterConfig.pidConfig)
+#define adjustmentProfileMutable(x) (&masterConfig.adjustmentProfile)
+#define modeActivationProfileMutable(x) (&masterConfig.modeActivationProfile)
+#define servoProfileMutable(x) (&masterConfig.servoProfile)
+#define customMotorMixerMutable(i) (&masterConfig.customMotorMixer[i])
+#define customServoMixersMutable(i) (&masterConfig.customServoMixer[i])
+#define displayPortProfileMspMutable(x) (&masterConfig.displayPortProfileMsp)
+#define displayPortProfileMax7456Mutable(x) (&masterConfig.displayPortProfileMax7456)
+#define displayPortProfileOledMutable(x) (&masterConfig.displayPortProfileOled)
+
+#define servoParams(x) (&servoProfile()->servoConf[i])
+#define adjustmentRanges(x) (&adjustmentProfile()->adjustmentRanges[x])
+#define rxFailsafeChannelConfigs(x) (&masterConfig.rxConfig.failsafe_channel_configurations[x])
+#define osdConfig(x) (&masterConfig.osdProfile)
+#define modeActivationConditions(x) (&masterConfig.modeActivationProfile.modeActivationConditions[x])
+
+#define servoParamsMutable(x) (&servoProfile()->servoConf[i])
+#define adjustmentRangesMutable(x) (&masterConfig.adjustmentProfile.adjustmentRanges[i])
+#define rxFailsafeChannelConfigsMutable(x) (&masterConfig.rxConfig.>failsafe_channel_configurations[x])
+#define osdConfigMutable(x) (&masterConfig.osdProfile)
+#define modeActivationConditionsMutable(x) (&masterConfig.modeActivationProfile.modeActivationConditions[x])
+#endif
 
 // System-wide
 typedef struct master_s {
@@ -118,7 +189,7 @@ typedef struct master_s {
     servoMixerConfig_t servoMixerConfig;
     servoMixer_t customServoMixer[MAX_SERVO_RULES];
     // Servo-related stuff
-    servoParam_t servoConf[MAX_SUPPORTED_SERVOS]; // servo configuration
+    servoProfile_t servoProfile;
     // gimbal-related configuration
     gimbalConfig_t gimbalConfig;
 #endif
@@ -127,12 +198,10 @@ typedef struct master_s {
 
     imuConfig_t imuConfig;
 
-    rollAndPitchTrims_t accelerometerTrims; // accelerometer trim
-    uint16_t max_angle_inclination;         // max inclination allowed in angle (level) mode. default 500 (50 degrees).
-
-    uint8_t pid_process_denom;              // Processing denominator for PID controller vs gyro sampling rate
+    pidConfig_t pidConfig;
 
     uint8_t debug_mode;                     // Processing denominator for PID controller vs gyro sampling rate
+    uint8_t task_statistics;
 
     gyroConfig_t gyroConfig;
     compassConfig_t compassConfig;
@@ -154,7 +223,6 @@ typedef struct master_s {
 #endif
 
     rxConfig_t rxConfig;
-    inputFilteringMode_e inputFilteringMode;  // Use hardware input filtering, e.g. for OrangeRX PPM/PWM receivers.
 
     armingConfig_t armingConfig;
 
@@ -196,7 +264,7 @@ typedef struct master_s {
     uint8_t transponderData[6];
 #endif
 
-#ifdef USE_RTC6705
+#if defined(USE_RTC6705)
     uint8_t vtx_channel;
     uint8_t vtx_power;
 #endif
@@ -209,6 +277,13 @@ typedef struct master_s {
     vcdProfile_t vcdProfile;
 #endif
 
+# ifdef USE_MSP_DISPLAYPORT
+    displayPortProfile_t displayPortProfileMsp;
+# endif
+# ifdef USE_MAX7456
+    displayPortProfile_t displayPortProfileMax7456;
+# endif
+
 #ifdef USE_SDCARD
     sdcardConfig_t sdcardConfig;
 #endif
@@ -216,9 +291,8 @@ typedef struct master_s {
     profile_t profile[MAX_PROFILE_COUNT];
     uint8_t current_profile_index;
 
-    modeActivationCondition_t modeActivationConditions[MAX_MODE_ACTIVATION_CONDITION_COUNT];
-    adjustmentRange_t adjustmentRanges[MAX_ADJUSTMENT_RANGE_COUNT];
-
+    modeActivationProfile_t modeActivationProfile;
+    adjustmentProfile_t adjustmentProfile;
 #ifdef VTX
     uint8_t vtx_band; //1=A, 2=B, 3=E, 4=F(Airwaves/Fatshark), 5=Raceband
     uint8_t vtx_channel; //1-8
@@ -240,6 +314,7 @@ typedef struct master_s {
     uint32_t preferred_beeper_off_flags;
 
     char name[MAX_NAME_LENGTH + 1];
+    char boardIdentifier[sizeof(TARGET_BOARD_IDENTIFIER)];
 
     uint8_t magic_ef;                       // magic number, should be 0xEF
     uint8_t chk;                            // XOR checksum

@@ -21,6 +21,8 @@
 
 #include "platform.h"
 
+#if defined(OSD) && defined(CMS)
+
 #include "build/version.h"
 
 #include "cms/cms.h"
@@ -28,10 +30,9 @@
 #include "cms/cms_menu_osd.h"
 
 #include "config/config_profile.h"
-#include "config/config_master.h"
 #include "config/feature.h"
-
-#if defined(OSD) && defined(CMS)
+#include "config/parameter_group.h"
+#include "config/parameter_group_ids.h"
 
 OSD_UINT8_t entryAlarmRssi = {&osdProfile()->rssi_alarm, 5, 90, 5};
 OSD_UINT16_t entryAlarmCapacity = {&osdProfile()->cap_alarm, 50, 30000, 50};
@@ -71,7 +72,7 @@ OSD_Entry menuOsdActiveElemsEntries[] =
     {"NAME", OME_VISIBLE, NULL, &osdProfile()->item_pos[OSD_CRAFT_NAME], 0},
     {"THROTTLE", OME_VISIBLE, NULL, &osdProfile()->item_pos[OSD_THROTTLE_POS], 0},
 #ifdef VTX
-    {"VTX CHAN", OME_VISIBLE, NULL, &osdProfile()->item_pos[OSD_VTX_CHANNEL]},
+    {"VTX CHAN", OME_VISIBLE, NULL, &osdProfile()->item_pos[OSD_VTX_CHANNEL], 0},
 #endif // VTX
     {"CURRENT (A)", OME_VISIBLE, NULL, &osdProfile()->item_pos[OSD_CURRENT_DRAW], 0},
     {"USED MAH", OME_VISIBLE, NULL, &osdProfile()->item_pos[OSD_MAH_DRAWN], 0},
@@ -80,6 +81,10 @@ OSD_Entry menuOsdActiveElemsEntries[] =
     {"GPS SATS.", OME_VISIBLE, NULL, &osdProfile()->item_pos[OSD_GPS_SATS], 0},
 #endif // GPS
     {"ALTITUDE", OME_VISIBLE, NULL, &osdProfile()->item_pos[OSD_ALTITUDE], 0},
+    {"POWER", OME_VISIBLE, NULL, &osdProfile()->item_pos[OSD_POWER], 0},
+    {"ROLL PID", OME_VISIBLE, NULL, &osdProfile()->item_pos[OSD_ROLL_PIDS], 0},
+    {"PITCH PID", OME_VISIBLE, NULL, &osdProfile()->item_pos[OSD_PITCH_PIDS], 0},
+    {"YAW PID", OME_VISIBLE, NULL, &osdProfile()->item_pos[OSD_YAW_PIDS], 0},
     {"BACK", OME_Back, NULL, NULL, 0},
     {NULL, OME_END, NULL, NULL, 0}
 };

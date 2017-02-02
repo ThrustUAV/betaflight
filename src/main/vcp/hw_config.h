@@ -53,9 +53,12 @@ void Set_USBClock(void);
 void Enter_LowPowerMode(void);
 void Leave_LowPowerMode(void);
 void USB_Interrupts_Config(void);
+#ifdef STM32F10X
+void USB_Interrupts_Disable(void);
+#endif
 void USB_Cable_Config(FunctionalState NewState);
 void Get_SerialNum(void);
-uint32_t CDC_Send_DATA(const uint8_t *ptrBuffer, uint8_t sendLength);  // HJI
+uint32_t CDC_Send_DATA(const uint8_t *ptrBuffer, uint32_t sendLength);  // HJI
 uint32_t CDC_Send_FreeBytes(void);
 uint32_t CDC_Receive_DATA(uint8_t* recvBuf, uint32_t len);       // HJI
 uint32_t CDC_Receive_BytesAvailable(void);

@@ -33,8 +33,9 @@ void SystemClock_Config(void);
 
 void systemReset(void)
 {
-    if (mpuConfiguration.reset)
-        mpuConfiguration.reset();
+    if (mpuResetFn) {
+        mpuResetFn();
+    }
 
     __disable_irq();
     NVIC_SystemReset();
@@ -42,9 +43,9 @@ void systemReset(void)
 
 void systemResetToBootloader(void)
 {
-    if (mpuConfiguration.reset)
-        mpuConfiguration.reset();
-
+    if (mpuResetFn) {
+        mpuResetFn();
+    }
 
     (*(__IO uint32_t *) (BKPSRAM_BASE + 4)) = 0xDEADBEEF;   // flag that will be readable after reboot
 
@@ -59,7 +60,6 @@ void enableGPIOPowerUsageAndNoiseReductions(void)
     __HAL_RCC_BKPSRAM_CLK_ENABLE();
     __HAL_RCC_DTCMRAMEN_CLK_ENABLE();
     __HAL_RCC_DMA2_CLK_ENABLE();
-    __HAL_RCC_DMA2D_CLK_ENABLE();
     __HAL_RCC_USB_OTG_HS_CLK_ENABLE();
     __HAL_RCC_USB_OTG_HS_ULPI_CLK_ENABLE();
     __HAL_RCC_GPIOA_CLK_ENABLE();
@@ -71,8 +71,11 @@ void enableGPIOPowerUsageAndNoiseReductions(void)
     __HAL_RCC_GPIOG_CLK_ENABLE();
     __HAL_RCC_GPIOH_CLK_ENABLE();
     __HAL_RCC_GPIOI_CLK_ENABLE();
+#ifndef STM32F722xx
+    __HAL_RCC_DMA2D_CLK_ENABLE();
     __HAL_RCC_GPIOJ_CLK_ENABLE();
     __HAL_RCC_GPIOK_CLK_ENABLE();
+#endif
 
     //APB1
     __HAL_RCC_TIM2_CLK_ENABLE();
@@ -94,13 +97,15 @@ void enableGPIOPowerUsageAndNoiseReductions(void)
     __HAL_RCC_I2C1_CLK_ENABLE();
     __HAL_RCC_I2C2_CLK_ENABLE();
     __HAL_RCC_I2C3_CLK_ENABLE();
-    __HAL_RCC_I2C4_CLK_ENABLE();
     __HAL_RCC_CAN1_CLK_ENABLE();
-    __HAL_RCC_CAN2_CLK_ENABLE();
-    __HAL_RCC_CEC_CLK_ENABLE();
     __HAL_RCC_DAC_CLK_ENABLE();
     __HAL_RCC_UART7_CLK_ENABLE();
     __HAL_RCC_UART8_CLK_ENABLE();
+#ifndef STM32F722xx
+    __HAL_RCC_I2C4_CLK_ENABLE();
+    __HAL_RCC_CAN2_CLK_ENABLE();
+    __HAL_RCC_CEC_CLK_ENABLE();
+#endif
 
     //APB2
     __HAL_RCC_TIM1_CLK_ENABLE();
@@ -117,9 +122,11 @@ void enableGPIOPowerUsageAndNoiseReductions(void)
     __HAL_RCC_TIM10_CLK_ENABLE();
     __HAL_RCC_TIM11_CLK_ENABLE();
     __HAL_RCC_SPI5_CLK_ENABLE();
-    __HAL_RCC_SPI6_CLK_ENABLE();
     __HAL_RCC_SAI1_CLK_ENABLE();
     __HAL_RCC_SAI2_CLK_ENABLE();
+#ifndef STM32F722xx
+    __HAL_RCC_SPI6_CLK_ENABLE();
+#endif
 //
 //    GPIO_InitTypeDef GPIO_InitStructure;
 //    GPIO_StructInit(&GPIO_InitStructure);

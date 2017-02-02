@@ -19,6 +19,7 @@
 
 #include "common/color.h"
 #include "common/time.h"
+#include "config/parameter_group.h"
 #include "drivers/io_types.h"
 
 #if defined (LED_STRIP_LENGTH)
@@ -151,11 +152,16 @@ typedef struct ledStripConfig_s {
     ioTag_t ioTag;
 } ledStripConfig_t;
 
+PG_DECLARE(ledStripConfig_t, ledStripConfig);
+
 ledConfig_t *ledConfigs;
 hsvColor_t *colors;
 modeColorIndexes_t *modeColors;
 specialColorIndexes_t specialColors;
 
+#define LF(name) LED_FUNCTION_ ## name
+#define LO(name) LED_FLAG_OVERLAY(LED_OVERLAY_ ## name)
+#define LD(name) LED_FLAG_DIRECTION(LED_DIRECTION_ ## name)
 #define DEFINE_LED(x, y, col, dir, func, ol, params) (LED_MOV_POS(CALCULATE_LED_XY(x, y)) | LED_MOV_COLOR(col) | LED_MOV_DIRECTION(dir) | LED_MOV_FUNCTION(func) | LED_MOV_OVERLAY(ol) | LED_MOV_PARAMS(params))
 
 static inline uint8_t ledGetXY(const ledConfig_t *lcfg)         { return ((*lcfg >> LED_POS_OFFSET) & LED_BIT_MASK(LED_POS_BITCNT)); }

@@ -33,8 +33,7 @@
 #define BEEPER                  PC13
 #define BEEPER_INVERTED
 
-#define INVERTER                PC15
-#define INVERTER_USART          USART2
+#define INVERTER_PIN_USART2     PC15
 
 // MPU interrupt
 #define USE_EXTI
@@ -69,14 +68,14 @@
 
 //#define SDCARD_DETECT_INVERTED
 
-#define SDCARD_DETECT_PIN               PB10
+#define SDCARD_DETECT_PIN               PB11
 #define SDCARD_DETECT_EXTI_LINE         EXTI_Line10
 #define SDCARD_DETECT_EXTI_PIN_SOURCE   EXTI_PinSource10
 #define SDCARD_DETECT_EXTI_PORT_SOURCE  EXTI_PortSourceGPIOB
 #define SDCARD_DETECT_EXTI_IRQn         EXTI15_10_IRQn
 
 #define SDCARD_SPI_INSTANCE             SPI2
-#define SDCARD_SPI_CS_PIN               SPI2_NSS_PIN
+#define SDCARD_SPI_CS_PIN               PB10
 
 // SPI2 is on the APB1 bus whose clock runs at 84MHz. Divide to under 400kHz for init:
 #define SDCARD_SPI_INITIALIZATION_CLOCK_DIVIDER 256 // 328kHz
@@ -151,7 +150,7 @@
 #define EXTERNAL1_ADC_GPIO_PIN  PC5
 
 // LED strip configuration using RC5 pin.
-//#define LED_STRIP
+#define LED_STRIP
 
 #define SPEKTRUM_BIND
 // USART2, PA3

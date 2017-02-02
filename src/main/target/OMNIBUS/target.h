@@ -45,18 +45,20 @@
 #define BMP280_SPI_INSTANCE     SPI1
 #define BMP280_CS_PIN           PA13
 
-//#define BARO
-//#define USE_BARO_BMP280
-//#define USE_BARO_SPI_BMP280
+#define BARO
+#define USE_BARO_BMP280
+#define USE_BARO_SPI_BMP280
 
-//#define MAG // External
-//#define USE_MAG_AK8963
-//#define USE_MAG_AK8975
-//#define USE_MAG_HMC5883
+#define MAG // External
+#define USE_MAG_AK8963
+#define USE_MAG_AK8975
+#define USE_MAG_HMC5883
 
 //#define SONAR
 //#define SONAR_ECHO_PIN          PB1
 //#define SONAR_TRIGGER_PIN       PB0
+
+#undef GPS
 
 #define USB_IO
 #define USB_CABLE_DETECTION
@@ -128,7 +130,6 @@
 // Divide to under 25MHz for normal operation:
 #define SDCARD_SPI_FULL_SPEED_CLOCK_DIVIDER     2
 
-#define USE_DSHOT
 #define USE_ESC_SENSOR
 
 // DSHOT output 4 uses DMA1_Channel5, so don't use it for the SDCARD until we find an alternative
@@ -163,7 +164,7 @@
 #define BUTTON_A_PIN            PB1
 #define BUTTON_B_PIN            PB0
 
-#define AVOID_UART3_FOR_PWM_PPM
+//#define AVOID_UART3_FOR_PWM_PPM // Disable this for using UART3
 
 #define SPEKTRUM_BIND
 // USART3,
