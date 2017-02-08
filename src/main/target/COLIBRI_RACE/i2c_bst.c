@@ -613,7 +613,7 @@ static bool bstSlaveProcessFeedbackCommand(uint8_t bstRequest)
                     bstWrite16(acc.accSmooth[i] / scale);
                 }
                 for (i = 0; i < 3; i++) {
-                    bstWrite16(lrintf(gyro.gyroADCf[i] /gyro.dev.scale));
+                    bstWrite16(gyroRateDps(i));
                 }
                 for (i = 0; i < 3; i++) {
                     bstWrite16(mag.magADC[i]);
@@ -1065,7 +1065,7 @@ static bool bstSlaveProcessWriteCommand(uint8_t bstWriteCommand)
                     mac->range.startStep = bstRead8();
                     mac->range.endStep = bstRead8();
 
-                    useRcControlsConfig(modeActivationProfile()->modeActivationConditions, &masterConfig.motorConfig, &currentProfile->pidProfile);
+                    useRcControlsConfig(modeActivationProfile()->modeActivationConditions, &currentProfile->pidProfile);
                 } else {
                     ret = BST_FAILED;
                 }

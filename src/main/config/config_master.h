@@ -35,7 +35,9 @@
 #include "drivers/flash.h"
 #include "drivers/display.h"
 
+#include "fc/rc_adjustments.h"
 #include "fc/rc_controls.h"
+#include "fc/fc_core.h"
 
 #include "flight/failsafe.h"
 #include "flight/mixer.h"
@@ -70,6 +72,7 @@
 #define servoConfig(x) (&masterConfig.servoConfig)
 #define servoMixerConfig(x) (&masterConfig.servoMixerConfig)
 #define gimbalConfig(x) (&masterConfig.gimbalConfig)
+#define channelForwardingConfig(x) (&masterConfig.channelForwardingConfig)
 #define boardAlignment(x) (&masterConfig.boardAlignment)
 #define imuConfig(x) (&masterConfig.imuConfig)
 #define gyroConfig(x) (&masterConfig.gyroConfig)
@@ -192,6 +195,8 @@ typedef struct master_s {
     servoProfile_t servoProfile;
     // gimbal-related configuration
     gimbalConfig_t gimbalConfig;
+    // Channel forwarding start channel
+    channelForwardingConfig_t channelForwardingConfig;
 #endif
 
     boardAlignment_t boardAlignment;
@@ -325,7 +330,5 @@ typedef struct master_s {
 } master_t;
 
 extern master_t masterConfig;
-extern profile_t *currentProfile;
-extern controlRateConfig_t *currentControlRateProfile;
 
 void createDefaultConfig(master_t *config);

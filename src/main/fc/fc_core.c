@@ -24,10 +24,10 @@
 
 #include "blackbox/blackbox.h"
 
-#include "common/maths.h"
 #include "common/axis.h"
-#include "common/utils.h"
 #include "common/filter.h"
+#include "common/maths.h"
+#include "common/utils.h"
 
 #include "config/config_profile.h"
 #include "config/feature.h"
@@ -72,6 +72,7 @@
 #include "flight/pid.h"
 #include "flight/failsafe.h"
 #include "flight/altitudehold.h"
+#include "flight/imu.h"
 
 
 // June 2013     V2.2-dev
@@ -92,7 +93,6 @@ int16_t headFreeModeHold;
 
 uint8_t motorControlEnable = false;
 
-int16_t telemTemperature1;      // gyro sensor temperature
 static uint32_t disarmAt;     // Time of automatic disarm when "Don't spin the motors when armed" is enabled and auto_disarm_delay is nonzero
 
 bool isRXDataNew;
@@ -287,7 +287,7 @@ void processRx(timeUs_t currentTimeUs)
         failsafeUpdateState();
     }
 
-    throttleStatus_e throttleStatus = calculateThrottleStatus(&masterConfig.rxConfig, flight3DConfig()->deadband3d_throttle);
+    const throttleStatus_e throttleStatus = calculateThrottleStatus();
 
     if (isAirmodeActive() && ARMING_FLAG(ARMED)) {
         if (rcCommand[THROTTLE] >= rxConfig()->airModeActivateThreshold) airmodeIsActivated = true; // Prevent Iterm from being reset
@@ -353,7 +353,7 @@ void processRx(timeUs_t currentTimeUs)
         }
     }
 
-    processRcStickPositions(&masterConfig.rxConfig, throttleStatus, armingConfig()->disarm_kill_switch);
+    processRcStickPositions(throttleStatus);
 
     if (feature(FEATURE_INFLIGHT_ACC_CAL)) {
         updateInflightCalibrationState();
@@ -363,7 +363,7 @@ void processRx(timeUs_t currentTimeUs)
 
     if (!cliMode) {
         updateAdjustmentStates(adjustmentProfile()->adjustmentRanges);
-        processRcAdjustments(currentControlRateProfile, rxConfig());
+        processRcAdjustments(currentControlRateProfile);
     }
 
     bool canUseHorizonMode = true;
@@ -469,8 +469,8 @@ static void subTaskMainSubprocesses(timeUs_t currentTimeUs)
     if (debugMode == DEBUG_PIDLOOP) {startTime = micros();}
 
     // Read out gyro temperature if used for telemmetry
-    if (feature(FEATURE_TELEMETRY) && gyro.dev.temperature) {
-        gyro.dev.temperature(&gyro.dev, &telemTemperature1);
+    if (feature(FEATURE_TELEMETRY)) {
+        gyroReadTemperature();
     }
 
 #ifdef MAG
@@ -484,7 +484,7 @@ static void subTaskMainSubprocesses(timeUs_t currentTimeUs)
     updateRcCommands();
     if (sensors(SENSOR_BARO) || sensors(SENSOR_SONAR)) {
         if (FLIGHT_MODE(BARO_MODE) || FLIGHT_MODE(SONAR_MODE)) {
-            applyAltHold(&masterConfig.airplaneConfig);
+            applyAltHold();
         }
     }
 #endif
