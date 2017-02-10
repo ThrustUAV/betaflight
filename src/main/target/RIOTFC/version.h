@@ -42,6 +42,7 @@ Smartport Implementation
 - Set defaults for smartport configuration
 -- Telemetry inversion disabled
 -- BIDIR disabled
+-- Hardware: 39k drain pull down was changed to 10k
 
 Version 0.3
 Restructuring Codebase away from haseebnain
@@ -59,3 +60,4 @@ Restructuring Codebase away from haseebnain
 -- Current scale --> 403
 - PID has been set to 8kHz
 - PID profile has been updated to include preset tune (Conrad Tune)
+

@@ -32,7 +32,8 @@
 
 #if defined(TELEMETRY) && defined(TELEMETRY_IBUS)
 
-#include "config/config_master.h"
+#include "config/parameter_group.h"
+#include "config/parameter_group_ids.h"
 
 #include "common/axis.h"
 
@@ -50,7 +51,7 @@
 #include "fc/rc_controls.h"
 #include "scheduler/scheduler.h"
 
-#include "telemetry/telemetry.h"    
+#include "telemetry/telemetry.h"
 #include "telemetry/ibus.h"
 
 /*
@@ -167,7 +168,7 @@ PG_RESET_TEMPLATE(ibusTelemetryConfig_t, ibusTelemetryConfig,
                  );
 */
 
-#define IBUS_TASK_PERIOD_US (500)
+#define IBUS_TASK_PERIOD_US (1000)
 
 #define IBUS_UART_MODE     (MODE_RXTX)
 #define IBUS_BAUDRATE      (115200)
@@ -197,7 +198,7 @@ typedef enum {
     IBUS_SENSOR_TYPE_EXTERNAL_VOLTAGE = 0x03
 } ibusSensorType_e;
 
-/* Address lookup relative to the sensor base address which is the lowest address seen by the FC 
+/* Address lookup relative to the sensor base address which is the lowest address seen by the FC
    The actual lowest value is likely to change when sensors are daisy chained */
 static const uint8_t sensorAddressTypeLookup[] = {
     IBUS_SENSOR_TYPE_EXTERNAL_VOLTAGE,
@@ -285,7 +286,7 @@ static ibusAddress_t getAddress(const uint8_t *ibusPacket)
 static void dispatchMeasurementReply(ibusAddress_t address)
 {
     int value;
-    
+
     switch (sensorAddressTypeLookup[address - ibusBaseAddress]) {
     case IBUS_SENSOR_TYPE_EXTERNAL_VOLTAGE:
         value = getVbat() * 10;
@@ -299,7 +300,7 @@ static void dispatchMeasurementReply(ibusAddress_t address)
         #ifdef BARO
             value = (baro.baroTemperature + 5) / 10; // +5 to make integer division rounding correct
         #else
-            value = telemTemperature1 * 10;
+            value = gyroGetTemperature() * 10;
         #endif
         sendIbusMeasurement(address, value + IBUS_TEMPERATURE_OFFSET);
         break;

@@ -27,11 +27,17 @@
 #include "common/color.h"
 #include "common/utils.h"
 
+#include "config/feature.h"
+#include "config/config_profile.h"
+#include "config/parameter_group.h"
+#include "config/parameter_group_ids.h"
+
 #include "drivers/sensor.h"
 #include "drivers/accgyro.h"
 #include "drivers/compass.h"
 #include "drivers/serial.h"
 #include "drivers/stack_check.h"
+#include "drivers/vtx_common.h"
 
 #include "fc/config.h"
 #include "fc/fc_msp.h"
@@ -42,8 +48,10 @@
 #include "fc/cli.h"
 #include "fc/fc_dispatch.h"
 
-#include "flight/pid.h"
 #include "flight/altitudehold.h"
+#include "flight/imu.h"
+#include "flight/mixer.h"
+#include "flight/pid.h"
 
 #include "io/beeper.h"
 #include "io/dashboard.h"
@@ -52,7 +60,7 @@
 #include "io/osd.h"
 #include "io/serial.h"
 #include "io/transponder_ir.h"
-#include "io/vtx_smartaudio.h"
+#include "io/vtx_tramp.h" // Will be gone
 
 #include "msp/msp_serial.h"
 
@@ -70,10 +78,6 @@
 #include "scheduler/scheduler.h"
 
 #include "telemetry/telemetry.h"
-
-#include "config/feature.h"
-#include "config/config_profile.h"
-#include "config/config_master.h"
 
 #ifdef USE_BST
 void taskBstMasterProcess(timeUs_t currentTimeUs);
@@ -93,7 +97,7 @@ static void taskUpdateAccelerometer(timeUs_t currentTimeUs)
 {
     UNUSED(currentTimeUs);
 
-    accUpdate(&accelerometerConfig()->accelerometerTrims);
+    accUpdate(&accelerometerConfigMutable()->accelerometerTrims);
 }
 
 static void taskHandleSerial(timeUs_t currentTimeUs)
@@ -127,7 +131,7 @@ static void taskUpdateBattery(timeUs_t currentTimeUs)
 
         if (ibatTimeSinceLastServiced >= IBATINTERVAL) {
             ibatLastServiced = currentTimeUs;
-            updateCurrentMeter(ibatTimeSinceLastServiced, &masterConfig.rxConfig, flight3DConfig()->deadband3d_throttle);
+            updateCurrentMeter(ibatTimeSinceLastServiced);
         }
     }
 }
@@ -200,7 +204,7 @@ static void taskTelemetry(timeUs_t currentTimeUs)
     telemetryCheckState();
 
     if (!cliMode && feature(FEATURE_TELEMETRY)) {
-        telemetryProcess(currentTimeUs, &masterConfig.rxConfig, flight3DConfig()->deadband3d_throttle);
+        telemetryProcess(currentTimeUs);
     }
 }
 #endif
@@ -212,8 +216,8 @@ void taskVtxControl(uint32_t currentTime)
     if (ARMING_FLAG(ARMED))
         return;
 
-#ifdef VTX_SMARTAUDIO
-    smartAudioProcess(currentTime);
+#ifdef VTX_COMMON
+    vtxCommonProcess(currentTime);
 #endif
 }
 #endif
@@ -300,7 +304,7 @@ void fcTasksInit(void)
     setTaskEnabled(TASK_STACK_CHECK, true);
 #endif
 #ifdef VTX_CONTROL
-#ifdef VTX_SMARTAUDIO
+#if defined(VTX_SMARTAUDIO) || defined(VTX_TRAMP)
     setTaskEnabled(TASK_VTXCTRL, true);
 #endif
 #endif

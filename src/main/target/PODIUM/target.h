@@ -23,13 +23,15 @@
 
 #define USBD_PRODUCT_STRING "Podium"
 #ifdef OPBL
-	#define USBD_SERIALNUMBER_STRING "0x8020000"
+  #define USBD_SERIALNUMBER_STRING "0x8020000"
 #endif
+
 
 // LED Pin Definitions
 #define LED0                    PB5
 #define LED1                    PB4
 #define LED2                    PB6
+
 
 // Inverter Pin Definition
 #define INVERTER                PC0
@@ -95,10 +97,12 @@
 
 // SPI GYRO Pin Definitions
 #define USE_SPI_DEVICE_1 
+
 #define SPI1_NSS_PIN            PA4
 #define SPI1_SCK_PIN            PA5
 #define SPI1_MISO_PIN           PA6
 #define SPI1_MOSI_PIN           PA7
+
 
 
 // SPI FLASH Pin Definitions
@@ -108,9 +112,11 @@
 #define SPI3_MISO_PIN           PC11
 #define SPI3_MOSI_PIN           PC12
 
+
 // Feature Definitions
 #define LED_STRIP
 //#define USE_DSHOT
+
 
 #define USE_ADC
 #define BOARD_HAS_VOLTAGE_DIVIDER
@@ -131,6 +137,7 @@
 #define TARGET_IO_PORTB 0xffff
 #define TARGET_IO_PORTC 0xffff
 
+
 // Timer Definitions
 
 // ver: 3.1.0.1.2
@@ -142,3 +149,4 @@
 #define USABLE_TIMER_CHANNEL_COUNT 11
 #define USED_TIMERS  ( TIM_N(2) | TIM_N(3) | TIM_N(5) | TIM_N(12) | TIM_N(8) | TIM_N(9))
 */
+
