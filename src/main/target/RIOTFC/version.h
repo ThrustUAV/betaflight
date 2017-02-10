@@ -16,20 +16,48 @@
  */
 
 #define FC_VERSION_THRUST_DEV_LEVEL_MAJOR 0 //increment when a significant change is made
-#define FC_VERSION_THRUST_DEV_LEVEL_MINOR 5 //increment when a bug is fixed
+#define FC_VERSION_THRUST_DEV_LEVEL_MINOR 8 //increment when a bug is fixed
 
+/* Version Log
+Version 0.8
+Updated Defaults
+ -Updated initial port defines
 
-/* Version Log */
-/*
+Version 0.7
+Barometer Inclusion
+ -Updated defines to include barometer support.
+
+Version 0.6
+Betaflight Update
+ -Code update (1/09/2016)
+ -DSHOT1200 Introduction
 
 Version 0.5
-Smartport Telemetry
- - BIDIR has been turned off
- - Smartport Serial Inversion has been turned off
- - Hardware: 39k drain pull down was changed to 10k
+TESTING OSD Performance
+DMA disabled
+ 
 
 Version 0.4
+Smartport Implementation
+- Set defaults for smartport configuration
+-- Telemetry inversion disabled
+-- BIDIR disabled
+-- Hardware: 39k drain pull down was changed to 10k
 
-Updated repo with Betaflight (12/29/2016)
+Version 0.3
+Restructuring Codebase away from haseebnain
 
-*/
+- Updated GYRO/ACCL allignments
+-- Yaw ->270
+-- Pitch -> 180
+-- Removed board allignment from Target.h
+- Include defines for custom LEDs
+- Timer defines updated in Target.c
+- Moved over presets from local version of Betaflight(V10)
+- Motor preset for MULTISHOT
+- Battery scaling adjusted
+-- Voltage scale --> 53
+-- Current scale --> 403
+- PID has been set to 8kHz
+- PID profile has been updated to include preset tune (Conrad Tune)
+

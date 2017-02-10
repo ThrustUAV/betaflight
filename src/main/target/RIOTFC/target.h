@@ -88,8 +88,9 @@
 
 #define BARO
 #define USE_BARO_MS5611
-//#define USE_BARO_BMP280
+#define MS5611_I2C_INSTANCE I2CDEV_1
 
+//#define USE_BARO_BMP280
 #define M25P16_CS_PIN           PB3
 #define M25P16_SPI_INSTANCE     SPI3
 
@@ -99,7 +100,7 @@
 	
 #define USE_SDCARD
 
-#define SDCARD_DETECT_INVERTED
+//#define SDCARD_DETECT_INVERTED
 
 //#define SDCARD_DETECT_PIN                   PB3
 #define SDCARD_SPI_INSTANCE                 SPI3
@@ -166,6 +167,11 @@
 #define I2C_DEVICE              (I2CDEV_1)
 //#define I2C_DEVICE_EXT          (I2CDEV_2)
 
+//MS5611 SPI pin defines
+#define I2C1_SCL                PB8
+#define I2C1_SDA                PB9
+
+
 #define USE_ADC
 #define VBAT_SCALE_DEFAULT      53 
 #define BOARD_HAS_VOLTAGE_DIVIDER
@@ -188,12 +194,12 @@
 #define WS2811_DMA_IT                   DMA_IT_TCIF2
 #define WS2811_DMA_CHANNEL              DMA_Channel_6
 #define WS2811_TIMER_CHANNEL            TIM_Channel_1
-	
 */
 	
 #define TELEMETRY
 
-#define DEFAULT_FEATURES        (FEATURE_VBAT | FEATURE_LED_STRIP | FEATURE_AIRMODE | FEATURE_CURRENT_METER)
+#define DEFAULT_FEATURES        (FEATURE_VBAT | FEATURE_LED_STRIP | FEATURE_AIRMODE | FEATURE_CURRENT_METER | FEATURE_TELEMETRY)
+
 #define DEFAULT_RX_FEATURE      FEATURE_RX_SERIAL
 #define SERIALRX_PROVIDER       SERIALRX_SBUS
 #define SERIALRX_UART           SERIAL_PORT_USART6
