@@ -26,8 +26,7 @@
 	#define USBD_SERIALNUMBER_STRING "0x8020000"
 #endif
 
-//#define PODIMOTORS 
- 
+
 #define LED0                    PB5
 #define LED1                    PB4
 #define LED2                    PB6
@@ -91,8 +90,10 @@
 #define MS5611_I2C_INSTANCE I2CDEV_1
 
 //#define USE_BARO_BMP280
-#define M25P16_CS_PIN           PB3
-#define M25P16_SPI_INSTANCE     SPI3
+
+// Flash Chip Defines
+//#define M25P16_CS_PIN           PB3
+//#define M25P16_SPI_INSTANCE     SPI3
 
 //#define RFM22B_CS_PIN           PA15
 //#define RFM22B_SPI_INSTANCE     SPI3
@@ -127,9 +128,9 @@
 	
 	
 
-#define USE_FLASHFS
-#define USE_FLASH_M25P16
-#define USE_FLASH_TOOLS
+//#define USE_FLASHFS
+//#define USE_FLASH_M25P16
+//#define USE_FLASH_TOOLS
 
 #define USE_VCP
 #define VBUS_SENSING_PIN        PA8
@@ -157,7 +158,7 @@
 #define SPI1_MISO_PIN           PA6
 #define SPI1_MOSI_PIN           PA7
 
-#define USE_SPI_DEVICE_3 //dataflash
+#define USE_SPI_DEVICE_3 // SDCard SPI
 #define SPI3_NSS_PIN            PB3
 #define SPI3_SCK_PIN            PC10
 #define SPI3_MISO_PIN           PC11
