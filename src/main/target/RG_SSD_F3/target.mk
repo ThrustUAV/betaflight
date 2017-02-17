@@ -12,3 +12,5 @@ TARGET_SRC = \
             io/transponder_ir.c
 
 HSE_VALUE      = 12000000
+
+
