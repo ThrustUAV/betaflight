@@ -19,6 +19,8 @@
 
 #include "common/time.h"
 
+#include "config/parameter_group.h"
+
 #define LAT 0
 #define LON 1
 
@@ -68,6 +70,8 @@ typedef struct gpsConfig_s {
     gpsAutoBaud_e autoBaud;
 } gpsConfig_t;
 
+PG_DECLARE(gpsConfig_t, gpsConfig);
+
 typedef struct gpsCoordinateDDDMMmmmm_s {
     int16_t dddmm;
     int16_t mmmm;
@@ -78,7 +82,7 @@ typedef enum {
     GPS_MESSAGE_STATE_IDLE = 0,
     GPS_MESSAGE_STATE_INIT,
     GPS_MESSAGE_STATE_SBAS,
-	GPS_MESSAGE_STATE_ENTRY_COUNT
+    GPS_MESSAGE_STATE_ENTRY_COUNT
 } gpsMessageState_e;
 
 typedef struct gpsData_s {

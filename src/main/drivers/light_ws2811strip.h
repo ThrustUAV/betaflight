@@ -19,11 +19,7 @@
 
 #include "io_types.h"
 
-#if defined (LED_STRIP_LENGTH)
-#define WS2811_LED_STRIP_LENGTH    LED_STRIP_LENGTH
-#else
 #define WS2811_LED_STRIP_LENGTH    32
-#endif
 #define WS2811_BITS_PER_LED        24
 // for 50us delay
 #define WS2811_DELAY_BUFFER_LENGTH 42

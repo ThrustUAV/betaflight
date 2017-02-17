@@ -15,11 +15,13 @@
  * along with Cleanflight.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#pragma once
+#include <stdint.h>
 
-struct controlRateConfig_s;
-struct motorConfig_s;
-void generateThrottleCurve(struct controlRateConfig_s *controlRateConfig, struct motorConfig_s *motorConfig);
+#include <platform.h>
 
-int16_t rcLookupThrottle(int32_t tmp);
+#include "config/config_master.h"
 
+void targetConfiguration(master_t *config) {
+    config->batteryConfig.vbatmaxcellvoltage = 45;
+    config->batteryConfig.vbatscale          = VBAT_SCALE_DEFAULT;
+}

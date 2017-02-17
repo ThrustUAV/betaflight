@@ -15,24 +15,38 @@
  * along with Cleanflight.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <stdint.h>
 #include <stdbool.h>
+#include <stdint.h>
 
 #include <platform.h>
 
+#include "common/utils.h"
+
+#include "drivers/io.h"
+
+#include "fc/rc_controls.h"
+
+#include "flight/failsafe.h"
+#include "flight/mixer.h"
+#include "flight/pid.h"
+
+#include "rx/rx.h"
+
+#include "config/config_profile.h"
 #include "config/config_master.h"
 
-// alternative defaults settings for BlueJayF4 targets
+#include "sensors/boardalignment.h"
+
+
 void targetConfiguration(master_t *config)
 {
-        
-        // Board Allignment
-		config->boardAlignment.rollDegrees = 180;
-		config->boardAlignment.pitchDegrees = 0;
-		config->boardAlignment.yawDegrees = 180;
-		
-		//Smartport Configurations
-		config->telemetryConfig.telemetry_inversion = 0;
-		config->telemetryConfig.sportHalfDuplex = 0;
-    
+    UNUSED(config);
+
+#ifdef KISSCC
+    // alternative defaults settings for Beebrain target
+    config->boardAlignment.rollDegrees = 180;
+    config->boardAlignment.pitchDegrees = 0;
+    config->boardAlignment.yawDegrees = 0;
+#endif
 }
+

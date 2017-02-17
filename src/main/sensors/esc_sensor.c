@@ -21,26 +21,31 @@
 
 #include <platform.h>
 
-#include "fc/config.h"
-#include "config/feature.h"
-#include "config/config_master.h"
+#ifdef USE_DSHOT
 
+#include "build/debug.h"
+
+#include "config/feature.h"
+#include "config/parameter_group.h"
+#include "config/parameter_group_ids.h"
+
+#include "common/maths.h"
 #include "common/utils.h"
 
-#include "drivers/system.h"
+#include "drivers/pwm_output.h"
 #include "drivers/serial.h"
 #include "drivers/serial_uart.h"
-#include "drivers/pwm_output.h"
+#include "drivers/system.h"
 
-#include "io/serial.h"
+#include "esc_sensor.h"
+
+#include "fc/config.h"
 
 #include "flight/mixer.h"
 
 #include "sensors/battery.h"
 
-#include "build/debug.h"
-
-#include "esc_sensor.h"
+#include "io/serial.h"
 
 /*
 KISS ESC TELEMETRY PROTOCOL
@@ -69,7 +74,6 @@ set debug_mode = DEBUG_ESC_TELEMETRY in cli
 
 */
 
-#ifdef USE_DSHOT
 enum {
     DEBUG_ESC_MOTOR_INDEX = 0,
     DEBUG_ESC_NUM_TIMEOUTS = 1,
@@ -186,7 +190,7 @@ bool escSensorInit(void)
     // Initialize serial port
     escSensorPort = openSerialPort(portConfig->identifier, FUNCTION_ESC_SENSOR, escSensorDataReceive, ESC_SENSOR_BAUDRATE, MODE_RX, options);
 
-    for (int i; i < MAX_SUPPORTED_MOTORS; i = i + 1) {
+    for (int i = 0; i < MAX_SUPPORTED_MOTORS; i = i + 1) {
         escSensorData[i].dataAge = ESC_DATA_INVALID;
     }
 

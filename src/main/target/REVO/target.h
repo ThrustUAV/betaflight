@@ -26,6 +26,7 @@
 #elif defined(REVOLT)
 #define TARGET_BOARD_IDENTIFIER "RVLT"
 #define USBD_PRODUCT_STRING     "Revolt"
+#define TARGET_DEFAULT_MIXER    MIXER_QUADX_1234
 
 #elif defined(SOULF4)
 #define TARGET_BOARD_IDENTIFIER "SOUL"
@@ -69,8 +70,7 @@
 #endif
 
 // PC0 used as inverter select GPIO
-#define INVERTER                PC0
-#define INVERTER_USART          USART1
+#define INVERTER_PIN_USART1     PC0
 
 #define MPU6000_CS_PIN          PA4
 #define MPU6000_SPI_INSTANCE    SPI1
@@ -185,8 +185,6 @@
 #endif
 
 #define LED_STRIP
-
-#define SENSORS_SET             (SENSOR_ACC)
 
 #define DEFAULT_RX_FEATURE      FEATURE_RX_SERIAL
 #if defined(PODIUMF4)

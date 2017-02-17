@@ -28,6 +28,12 @@
 #include "common/maths.h"
 #include "common/printf.h"
 
+#include "config/config_eeprom.h"
+#include "config/config_profile.h"
+#include "config/feature.h"
+#include "config/parameter_group.h"
+#include "config/parameter_group_ids.h"
+
 #include "cms/cms.h"
 #include "cms/cms_types.h"
 
@@ -92,6 +98,7 @@
 #include "io/displayport_msp.h"
 #include "io/vtx.h"
 #include "io/vtx_smartaudio.h"
+#include "io/vtx_tramp.h"
 
 #include "scheduler/scheduler.h"
 
@@ -114,10 +121,6 @@
 #include "flight/failsafe.h"
 #include "flight/navigation.h"
 
-#include "config/config_eeprom.h"
-#include "config/config_profile.h"
-#include "config/config_master.h"
-#include "config/feature.h"
 
 #ifdef USE_HARDWARE_REVISION_DETECTION
 #include "hardware_revision.h"
@@ -185,7 +188,7 @@ void init(void)
 
     //i2cSetOverclock(masterConfig.i2c_overclock);
 
-    debugMode = masterConfig.debug_mode;
+    debugMode = systemConfig()->debug_mode;
 
     // Latch active features to be used for feature() in the remainder of init().
     latchActiveFeatures();
@@ -240,13 +243,13 @@ void init(void)
 #ifdef SPEKTRUM_BIND
     if (feature(FEATURE_RX_SERIAL)) {
         switch (rxConfig()->serialrx_provider) {
-            case SERIALRX_SPEKTRUM1024:
-            case SERIALRX_SPEKTRUM2048:
-                // Spektrum satellite binding if enabled on startup.
-                // Must be called before that 100ms sleep so that we don't lose satellite's binding window after startup.
-                // The rest of Spektrum initialization will happen later - via spektrumInit()
-                spektrumBind(rxConfig());
-                break;
+        case SERIALRX_SPEKTRUM1024:
+        case SERIALRX_SPEKTRUM2048:
+            // Spektrum satellite binding if enabled on startup.
+            // Must be called before that 100ms sleep so that we don't lose satellite's binding window after startup.
+            // The rest of Spektrum initialization will happen later - via spektrumInit()
+            spektrumBind(rxConfigMutable());
+            break;
         }
     }
 #endif
@@ -256,21 +259,21 @@ void init(void)
     timerInit();  // timer must be initialized before any channel is allocated
 
 #if defined(AVOID_UART1_FOR_PWM_PPM)
-    serialInit(serialConfig(), feature(FEATURE_SOFTSERIAL),
+    serialInit(feature(FEATURE_SOFTSERIAL),
             feature(FEATURE_RX_PPM) || feature(FEATURE_RX_PARALLEL_PWM) ? SERIAL_PORT_USART1 : SERIAL_PORT_NONE);
 #elif defined(AVOID_UART2_FOR_PWM_PPM)
-    serialInit(serialConfig(), feature(FEATURE_SOFTSERIAL),
+    serialInit(feature(FEATURE_SOFTSERIAL),
             feature(FEATURE_RX_PPM) || feature(FEATURE_RX_PARALLEL_PWM) ? SERIAL_PORT_USART2 : SERIAL_PORT_NONE);
 #elif defined(AVOID_UART3_FOR_PWM_PPM)
-    serialInit(serialConfig(), feature(FEATURE_SOFTSERIAL),
+    serialInit(feature(FEATURE_SOFTSERIAL),
             feature(FEATURE_RX_PPM) || feature(FEATURE_RX_PARALLEL_PWM) ? SERIAL_PORT_USART3 : SERIAL_PORT_NONE);
 #else
-    serialInit(serialConfig(), feature(FEATURE_SOFTSERIAL), SERIAL_PORT_NONE);
+    serialInit(feature(FEATURE_SOFTSERIAL), SERIAL_PORT_NONE);
 #endif
 
-    mixerInit(mixerConfig()->mixerMode, masterConfig.customMotorMixer);
+    mixerInit(mixerConfig()->mixerMode, customMotorMixerMutable(0));
 #ifdef USE_SERVOS
-    servoMixerInit(masterConfig.customServoMixer);
+    servoMixerInit(customServoMixers(0));
 #endif
 
     uint16_t idlePulse = motorConfig()->mincommand;
@@ -308,8 +311,8 @@ void init(void)
     beeperInit(beeperConfig());
 #endif
 /* temp until PGs are implemented. */
-#ifdef INVERTER
-    initInverter();
+#ifdef USE_INVERTER
+    initInverters();
 #endif
 
 #ifdef USE_BST
@@ -392,20 +395,15 @@ void init(void)
     if (feature(FEATURE_OSD)) {
 #ifdef USE_MAX7456
         // if there is a max7456 chip for the OSD then use it, otherwise use MSP
-        displayPort_t *osdDisplayPort = max7456DisplayPortInit(vcdProfile());
+        displayPort_t *osdDisplayPort = max7456DisplayPortInit(vcdProfile(), displayPortProfileMax7456());
 #else
-        displayPort_t *osdDisplayPort = displayPortMspInit();
+        displayPort_t *osdDisplayPort = displayPortMspInit(displayPortProfileMax7456());
 #endif
         osdInit(osdDisplayPort);
     }
 #endif
 
-#ifdef SONAR
-    const sonarConfig_t *sonarConfig = sonarConfig();
-#else
-    const void *sonarConfig = NULL;
-#endif
-    if (!sensorsAutodetect(gyroConfig(), accelerometerConfig(), compassConfig(), barometerConfig(), sonarConfig)) {
+    if (!sensorsAutodetect()) {
         // if gyro was not detected due to whatever reason, we give up now.
         failureMode(FAILURE_MISSING_ACC);
     }
@@ -438,16 +436,16 @@ void init(void)
     mspSerialInit();
 
 #if defined(USE_MSP_DISPLAYPORT) && defined(CMS)
-    cmsDisplayPortRegister(displayPortMspInit());
+    cmsDisplayPortRegister(displayPortMspInit(displayPortProfileMsp()));
 #endif
 
 #ifdef USE_CLI
     cliInit(serialConfig());
 #endif
 
-    failsafeInit(rxConfig(), flight3DConfig()->deadband3d_throttle);
+    failsafeInit();
 
-    rxInit(rxConfig(), modeActivationProfile()->modeActivationConditions);
+    rxInit(rxConfig(), modeActivationConditions(0));
 
 #ifdef GPS
     if (feature(FEATURE_GPS)) {
@@ -463,7 +461,7 @@ void init(void)
 #endif
 
 #ifdef LED_STRIP
-    ledStripInit(ledStripConfig());
+    ledStripInit();
 
     if (feature(FEATURE_LED_STRIP)) {
         ledStripEnable();
@@ -489,7 +487,6 @@ void init(void)
 #ifdef TRANSPONDER
     if (feature(FEATURE_TRANSPONDER)) {
         transponderInit(masterConfig.transponderData);
-        transponderEnable();
         transponderStartRepeating();
         systemState |= SYSTEM_STATE_TRANSPONDER_ENABLED;
     }
@@ -523,9 +520,17 @@ void init(void)
     baroSetCalibrationCycles(CALIBRATING_BARO_CYCLES);
 #endif
 
+#ifdef VTX_CONTROL
+
 #ifdef VTX_SMARTAUDIO
     smartAudioInit();
 #endif
+
+#ifdef VTX_TRAMP
+    trampInit();
+#endif
+
+#endif // VTX_CONTROL
 
     // start all timers
     // TODO - not implemented yet
@@ -546,7 +551,7 @@ void init(void)
     // Now that everything has powered up the voltage and cell count be determined.
 
     if (feature(FEATURE_VBAT | FEATURE_CURRENT_METER))
-        batteryInit(batteryConfig());
+        batteryInit();
 
 #ifdef USE_DASHBOARD
     if (feature(FEATURE_DASHBOARD)) {
