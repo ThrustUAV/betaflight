@@ -184,7 +184,7 @@
 #define VBAT_ADC_CHANNEL       ADC_Channel_13
 
 #define LED_STRIP
-#define LED_STRIP_LENGTH 38
+#define LED_STRIP_LENGTH 35
 #define RIOTLEDCONFIG
 
 /*
