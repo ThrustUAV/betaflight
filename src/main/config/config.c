@@ -343,6 +343,7 @@ void resetSerialConfig(serialConfig_t *serialConfig)
     }
 
     serialConfig->portConfigs[0].functionMask = FUNCTION_MSP;
+	serialConfig->portConfigs[1].functionMask = FUNCTION_GPS;
 
 #ifdef CC3D
     // This allows MSP connection via USART & VCP so the board can be reconfigured.
@@ -499,7 +500,7 @@ static void resetConf(void)
     compassConfig()->mag_align = ALIGN_DEFAULT;
 
     boardAlignment()->rollDeciDegrees = 0;
-    boardAlignment()->pitchDeciDegrees = 0;
+    boardAlignment()->pitchDeciDegrees = 1800;
     boardAlignment()->yawDeciDegrees = 0;
 
     gyroConfig()->gyroMovementCalibrationThreshold = 32;

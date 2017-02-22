@@ -17,7 +17,7 @@
 
 #pragma once
 
-#define TARGET_BOARD_IDENTIFIER "AFNA" // AFroNAze - NAZE might be considered misleading on Naze clones like the flip32.
+#define TARGET_BOARD_IDENTIFIER "RUBI" // AFroNAze - NAZE might be considered misleading on Naze clones like the flip32.
 #define USE_HARDWARE_REVISION_DETECTION
 
 #define LED0                    PB3
@@ -195,15 +195,22 @@
 // USART2, PA3
 #define BIND_PIN                PA3
 
-//#define USE_SERIAL_4WAY_BLHELI_INTERFACE
+#define USE_SERIAL_4WAY_BLHELI_INTERFACE
 
 #define TARGET_MOTOR_COUNT      6
 #define DISABLE_UNCOMMON_MIXERS
 
-#define DEFAULT_FEATURES        FEATURE_VBAT
+#define DEFAULT_FEATURES        (FEATURE_VBAT | FEATURE_GPS | FEATURE_LED_STRIP | FEATURE_PWM_OUTPUT_ENABLE)
 #define DEFAULT_RX_FEATURE      FEATURE_RX_PPM
 
 #undef BLACKBOX
+#undef TELEMETRY
+#undef USE_SERVOS
+#undef OSD
+
+#undef GPS_PROTO_NMEA
+#undef GPS_PROTO_I2C_NAV
+#undef GPS_PROTO_NAZA
 
 // Number of available PWM outputs
 #define MAX_PWM_OUTPUT_PORTS    10

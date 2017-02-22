@@ -94,6 +94,10 @@ static void ledStripDisable(void);
 #define LED_STRIP_HZ(hz) ((int32_t)((1000 * 1000) / (hz)))
 #define LED_STRIP_MS(ms) ((int32_t)(1000 * (ms)))
 
+#define LF(name) LED_FUNCTION_ ## name
+#define LO(name) LED_FLAG_OVERLAY(LED_OVERLAY_ ## name)
+#define LD(name) LED_FLAG_DIRECTION(LED_DIRECTION_ ## name)
+
 #if LED_MAX_STRIP_LENGTH > WS2811_LED_STRIP_LENGTH
 # error "Led strip length must match driver"
 #endif
@@ -165,6 +169,35 @@ static const specialColorIndexes_t defaultSpecialColors[] = {
        [LED_SCOLOR_GPSNOLOCK]       = COLOR_ORANGE,
        [LED_SCOLOR_GPSLOCKED]       = COLOR_GREEN,
     }}
+};
+
+static const ledConfig_t defaultLedStripConfig[] = {
+    DEFINE_LED(5, 5, 14, 0 , LF(GPS), 0, 0),  			// 0
+	DEFINE_LED(6, 6, 2, 0 , LF(ARM_STATE), 0, 0),		// 1
+    DEFINE_LED(6, 7, 6, 0 , LO(LARSON_SCANNER), 0, 0),	// 2
+    DEFINE_LED(6, 8, 6, 0 , LO(LARSON_SCANNER), 0, 0),	// 3
+    DEFINE_LED(6, 9, 2, 0 , LF(ARM_STATE), 0, 0),		// 4
+    DEFINE_LED(5, 10, 14, 0 , LF(GPS), 0, 0),			// 5
+	DEFINE_LED(10, 5, 14, 0 , LF(GPS), 0, 0),			// 6
+    DEFINE_LED(9, 6, 2, 0 , LF(ARM_STATE), 0, 0),		// 7 
+    DEFINE_LED(9, 7, 6, 0 , LO(LARSON_SCANNER), 0, 0),	// 8
+    DEFINE_LED(9, 8, 6, 0 , LO(LARSON_SCANNER), 0, 0),	// 9 
+    DEFINE_LED(9, 9, 2, 0 , LF(ARM_STATE), 0, 0),		// 10
+    DEFINE_LED(10, 10, 14, 0 , LF(GPS), 0, 0),			// 11
+    DEFINE_LED(13, 5, 14, 0 , LF(GPS), 0, 0),			// 12
+    DEFINE_LED(12, 6, 2, 0 , LF(ARM_STATE), 0, 0),		// 13
+    DEFINE_LED(12, 7, 6, 0 , LO(LARSON_SCANNER), 0, 0),	// 14
+    DEFINE_LED(12, 8, 6, 0 , LO(LARSON_SCANNER), 0, 0),	// 15
+    DEFINE_LED(12, 9, 2, 0 , LF(ARM_STATE), 0, 0),		// 16
+    DEFINE_LED(13, 10, 14, 0 , LF(GPS), 0, 0),			// 17
+    DEFINE_LED(2, 5, 14, 0 , LF(GPS), 0, 0),			// 18
+    DEFINE_LED(3, 6, 2, 0 , LF(ARM_STATE), 0, 0),		// 19
+    DEFINE_LED(3, 7, 6, 0 , LO(LARSON_SCANNER), 0, 0),	// 20
+    DEFINE_LED(3, 8, 6, 0 , LO(LARSON_SCANNER), 0, 0),	// 21
+    DEFINE_LED(3, 9, 2, 0 , LF(ARM_STATE), 0, 0),		// 22
+    DEFINE_LED(2, 10, 14, 0 , LF(GPS), 0, 0),			// 23
+    
+   
 };
 
 static int scaledThrottle;
@@ -1073,6 +1106,8 @@ void pgResetFn_specialColors(specialColorIndexes_t *instance)
 void applyDefaultLedStripConfig(ledConfig_t *ledConfigs)
 {
     memset(ledConfigs, 0, LED_MAX_STRIP_LENGTH * sizeof(ledConfig_t));
+	memcpy(ledConfigs, &defaultLedStripConfig, sizeof(defaultLedStripConfig));
+	
 }
 
 void applyDefaultColors(hsvColor_t *colors)
