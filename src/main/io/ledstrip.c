@@ -172,30 +172,33 @@ static const specialColorIndexes_t defaultSpecialColors[] = {
 };
 
 static const ledConfig_t defaultLedStripConfig[] = {
-    DEFINE_LED(5, 5, 14, 0 , LF(GPS), 0, 0),  			// 0
-	DEFINE_LED(6, 6, 2, 0 , LF(ARM_STATE), 0, 0),		// 1
-    DEFINE_LED(6, 7, 6, 0 , LO(LARSON_SCANNER), 0, 0),	// 2
-    DEFINE_LED(6, 8, 6, 0 , LO(LARSON_SCANNER), 0, 0),	// 3
-    DEFINE_LED(6, 9, 2, 0 , LF(ARM_STATE), 0, 0),		// 4
-    DEFINE_LED(5, 10, 14, 0 , LF(GPS), 0, 0),			// 5
-	DEFINE_LED(10, 5, 14, 0 , LF(GPS), 0, 0),			// 6
-    DEFINE_LED(9, 6, 2, 0 , LF(ARM_STATE), 0, 0),		// 7 
-    DEFINE_LED(9, 7, 6, 0 , LO(LARSON_SCANNER), 0, 0),	// 8
-    DEFINE_LED(9, 8, 6, 0 , LO(LARSON_SCANNER), 0, 0),	// 9 
-    DEFINE_LED(9, 9, 2, 0 , LF(ARM_STATE), 0, 0),		// 10
-    DEFINE_LED(10, 10, 14, 0 , LF(GPS), 0, 0),			// 11
-    DEFINE_LED(13, 5, 14, 0 , LF(GPS), 0, 0),			// 12
-    DEFINE_LED(12, 6, 2, 0 , LF(ARM_STATE), 0, 0),		// 13
-    DEFINE_LED(12, 7, 6, 0 , LO(LARSON_SCANNER), 0, 0),	// 14
-    DEFINE_LED(12, 8, 6, 0 , LO(LARSON_SCANNER), 0, 0),	// 15
-    DEFINE_LED(12, 9, 2, 0 , LF(ARM_STATE), 0, 0),		// 16
-    DEFINE_LED(13, 10, 14, 0 , LF(GPS), 0, 0),			// 17
-    DEFINE_LED(2, 5, 14, 0 , LF(GPS), 0, 0),			// 18
-    DEFINE_LED(3, 6, 2, 0 , LF(ARM_STATE), 0, 0),		// 19
-    DEFINE_LED(3, 7, 6, 0 , LO(LARSON_SCANNER), 0, 0),	// 20
-    DEFINE_LED(3, 8, 6, 0 , LO(LARSON_SCANNER), 0, 0),	// 21
-    DEFINE_LED(3, 9, 2, 0 , LF(ARM_STATE), 0, 0),		// 22
-    DEFINE_LED(2, 10, 14, 0 , LF(GPS), 0, 0),			// 23
+	
+/// DEFINE_LED(x, 	y, 	col, 	dir, 	func, 	ol, 	params) (LED_MOV_POS(CALCULATE_LED_XY(x, y)) | LED_MOV_COLOR(col) | LED_MOV_DIRECTION(dir) | LED_MOV_FUNCTION(func) | LED_MOV_OVERLAY(ol) | LED_MOV_PARAMS(params))
+
+    DEFINE_LED(5,	5, 	12, 	0 , LF(GPS), 0, 0),  			// 0
+	DEFINE_LED(6, 	6, 	10, 0 , LF(ARM_STATE), 0, 0),		// 1
+    DEFINE_LED(6, 	7, 	6, 	0 , 0,LO(LARSON_SCANNER), 0),	// 2
+    DEFINE_LED(6, 	8, 	6, 	0 , 0,LO(LARSON_SCANNER), 0),	// 3
+    DEFINE_LED(6, 	9, 	10, 0 , LF(ARM_STATE), 0, 0),		// 4
+    DEFINE_LED(5, 	10, 12, 	0 , LF(GPS), 0, 0),			// 5
+	DEFINE_LED(9, 	5, 	12, 	0 , LF(GPS), 0, 0),			// 6
+    DEFINE_LED(8, 	6, 	10, 0 , LF(ARM_STATE), 0, 0),		// 7 
+    DEFINE_LED(8, 	7, 	6, 	0 , 0,LO(LARSON_SCANNER), 0),	// 8
+    DEFINE_LED(8, 	8, 	6, 	0 , 0,LO(LARSON_SCANNER), 0),	// 9 
+    DEFINE_LED(8, 	9, 	10, 0 , LF(ARM_STATE), 0, 0),		// 10
+    DEFINE_LED(9, 	10,	12, 	0 , LF(GPS), 0, 0),			// 11
+    DEFINE_LED(12, 	5, 	12, 	0 , LF(GPS), 0, 0),			// 12
+    DEFINE_LED(11, 	6, 	10, 0 , LF(ARM_STATE), 0, 0),		// 13
+    DEFINE_LED(11,	7, 	6, 	0 , 0,LO(LARSON_SCANNER), 0),	// 14
+    DEFINE_LED(11, 	8, 	6, 	0 , 0,LO(LARSON_SCANNER), 0),	// 15
+    DEFINE_LED(11, 	9, 	10, 0 , LF(ARM_STATE), 0, 0),		// 16
+    DEFINE_LED(12, 10, 	12, 	0 , LF(GPS), 0, 0),			// 17
+    DEFINE_LED(2, 	5, 	12, 	0 , LF(GPS), 0, 0),			// 18
+    DEFINE_LED(3, 	6, 	10, 0 , LF(ARM_STATE), 0, 0),		// 19
+    DEFINE_LED(3, 	7, 	6, 	0 , 0,LO(LARSON_SCANNER), 0),	// 20
+    DEFINE_LED(3, 	8, 	6, 	0 , 0,LO(LARSON_SCANNER), 0),	// 21
+    DEFINE_LED(3, 	9, 	10, 0 , LF(ARM_STATE), 0, 0),		// 22
+    DEFINE_LED(2, 	10, 12, 0 , LF(GPS), 0, 0),			// 23
     
    
 };
@@ -1107,6 +1110,7 @@ void applyDefaultLedStripConfig(ledConfig_t *ledConfigs)
 {
     memset(ledConfigs, 0, LED_MAX_STRIP_LENGTH * sizeof(ledConfig_t));
 	memcpy(ledConfigs, &defaultLedStripConfig, sizeof(defaultLedStripConfig));
+	
 	
 }
 

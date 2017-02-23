@@ -261,7 +261,7 @@ void resetMotorConfig(motorConfig_t *motorConfig)
     motorConfig->motorPwmRate = BRUSHED_MOTORS_PWM_RATE;
 #else
     motorConfig->minthrottle = 1150;
-    motorConfig->motorPwmProtocol = PWM_TYPE_STANDARD;
+    motorConfig->motorPwmProtocol = PWM_TYPE_MULTISHOT;
     motorConfig->motorPwmRate = BRUSHLESS_MOTORS_PWM_RATE;
 #endif
     motorConfig->maxthrottle = 1850;
