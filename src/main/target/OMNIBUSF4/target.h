@@ -21,8 +21,6 @@
 #define TARGET_BOARD_IDENTIFIER "OBF4"
 #endif
 
-#define CONFIG_START_FLASH_ADDRESS (0x08080000) //0x08080000 to 0x080A0000 (FLASH_Sector_8)
-
 #define USBD_PRODUCT_STRING "OmnibusF4"
 #ifdef OPBL
 #define USBD_SERIALNUMBER_STRING "0x8020000"
@@ -35,7 +33,7 @@
 #define BEEPER                  PB4
 #define BEEPER_INVERTED
 
-#define INVERTER_PIN_USART1     PC0 // PC0 used as inverter select GPIO
+#define INVERTER_PIN_UART1      PC0 // PC0 used as inverter select GPIO
 
 #define MPU6000_CS_PIN          PA4
 #define MPU6000_SPI_INSTANCE    SPI1
@@ -125,10 +123,13 @@
 #define UART6_RX_PIN            PC7
 #define UART6_TX_PIN            PC6
 
+#define USE_SOFTSERIAL1
+#define USE_SOFTSERIAL2
+
+#define SERIAL_PORT_COUNT       6 //VCP, USART1, USART3, USART6, SOFTSERIAL x 2
+
 #define USE_ESCSERIAL
 #define ESCSERIAL_TIMER_TX_HARDWARE 0 // PWM 1
-
-#define SERIAL_PORT_COUNT       4 //VCP, USART1, USART3, USART6
 
 #define USE_SPI
 
@@ -152,9 +153,6 @@
 #define SPI3_MISO_PIN           PC11
 #define SPI3_MOSI_PIN           PC12
 
-//#define USE_I2C
-//#define I2C_DEVICE (I2CDEV_1)
-
 #define USE_ADC
 #define CURRENT_METER_ADC_PIN   PC1
 #define VBAT_ADC_PIN            PC2
@@ -162,12 +160,12 @@
 
 #define USE_ESC_SENSOR
 
-#define LED_STRIP
-
 #define DEFAULT_RX_FEATURE      FEATURE_RX_SERIAL
-#define DEFAULT_FEATURES        (FEATURE_BLACKBOX | FEATURE_VBAT)
+#define DEFAULT_FEATURES        (FEATURE_BLACKBOX | FEATURE_VBAT | FEATURE_OSD)
 
 #define AVOID_UART1_FOR_PWM_PPM
+
+#define SPEKTRUM_BIND_PIN       UART1_RX_PIN
 
 #define USE_SERIAL_4WAY_BLHELI_INTERFACE
 

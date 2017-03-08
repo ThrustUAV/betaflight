@@ -20,11 +20,13 @@
 
 #include <platform.h>
 
+#ifdef TARGET_CONFIG
 #include "common/utils.h"
 
 #include "drivers/io.h"
 
 #include "fc/rc_controls.h"
+#include "fc/controlrate_profile.h"
 
 #include "flight/failsafe.h"
 #include "flight/mixer.h"
@@ -37,13 +39,23 @@
 
 #include "hardware_revision.h"
 
+#ifdef USE_PARAMETER_GROUPS
+void targetConfiguration(void)
+{
+
+}
+void targetValidateConfiguration(void)
+{
+
+}
+#else
 void targetConfiguration(master_t *config)
 {
     UNUSED(config);
 
 #ifdef BEEBRAIN
     // alternative defaults settings for Beebrain target
-    config->motorConfig.motorPwmRate = 4000;
+    config->motorConfig.dev.motorPwmRate = 4000;
     config->failsafeConfig.failsafe_delay = 2;
     config->failsafeConfig.failsafe_off_delay = 0;
 
@@ -71,13 +83,13 @@ void targetConfiguration(master_t *config)
         config->profile[profileId].pidProfile.P8[PIDLEVEL] = 30;
         config->profile[profileId].pidProfile.D8[PIDLEVEL] = 30;
 
-        for (int rateProfileId = 0; rateProfileId < MAX_RATEPROFILES; rateProfileId++) {
-            config->profile[profileId].controlRateProfile[rateProfileId].rcRate8 = 100;
-            config->profile[profileId].controlRateProfile[rateProfileId].rcYawRate8 = 110;
-            config->profile[profileId].controlRateProfile[rateProfileId].rcExpo8 = 0;
-            config->profile[profileId].controlRateProfile[rateProfileId].rates[ROLL] = 77;
-            config->profile[profileId].controlRateProfile[rateProfileId].rates[PITCH] = 77;
-            config->profile[profileId].controlRateProfile[rateProfileId].rates[YAW] = 80;
+        for (int rateProfileId = 0; rateProfileId < CONTROL_RATE_PROFILE_COUNT; rateProfileId++) {
+            config->controlRateProfile[rateProfileId].rcRate8 = 100;
+            config->controlRateProfile[rateProfileId].rcYawRate8 = 110;
+            config->controlRateProfile[rateProfileId].rcExpo8 = 0;
+            config->controlRateProfile[rateProfileId].rates[ROLL] = 77;
+            config->controlRateProfile[rateProfileId].rates[PITCH] = 77;
+            config->controlRateProfile[rateProfileId].rates[YAW] = 80;
 
             config->profile[profileId].pidProfile.dtermSetpointWeight = 200;
             config->profile[profileId].pidProfile.setpointRelaxRatio = 50;
@@ -88,13 +100,27 @@ void targetConfiguration(master_t *config)
 #if !defined(AFROMINI) && !defined(BEEBRAIN)
     if (hardwareRevision >= NAZE32_REV5) {
         // naze rev4 and below used opendrain to PNP for buzzer. Rev5 and above use PP to NPN.
-        config->beeperConfig.isOpenDrain = false;
-        config->beeperConfig.isInverted = true;
+        config->beeperDevConfig.isOpenDrain = false;
+        config->beeperDevConfig.isInverted = true;
     } else {
-        config->beeperConfig.isOpenDrain = true;
-        config->beeperConfig.isInverted = false;
+        config->beeperDevConfig.isOpenDrain = true;
+        config->beeperDevConfig.isInverted = false;
         config->flashConfig.csTag = IO_TAG_NONE;
+    }
+#endif
+
+#ifdef MAG_INT_EXTI
+    if (hardwareRevision < NAZE32_REV5) {
+        config->compassConfig.interruptTag = IO_TAG(PB12);
     }
 #endif
 }
 
+void targetValidateConfiguration(master_t *config)
+{
+    if (hardwareRevision < NAZE32_REV5 && config->accelerometerConfig.acc_hardware == ACC_ADXL345) {
+        config->accelerometerConfig.acc_hardware = ACC_NONE;
+    }  
+}
+#endif
+#endif // USE_PARAMETER_GROUPS
