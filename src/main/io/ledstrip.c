@@ -177,28 +177,28 @@ static const ledConfig_t defaultLedStripConfig[] = {
 
     DEFINE_LED(5,	5, 	12, 	0 , LF(GPS), 0, 0),  			// 0
 	DEFINE_LED(6, 	6, 	10, 0 , LF(ARM_STATE), 0, 0),		// 1
-    DEFINE_LED(6, 	7, 	6, 	0 , 0,LO(LARSON_SCANNER), 0),	// 2
-    DEFINE_LED(6, 	8, 	6, 	0 , 0,LO(LARSON_SCANNER), 0),	// 3
+    DEFINE_LED(6, 	7, 	6, 	0 , 0,LO(WARNING), 0),	// 2
+    DEFINE_LED(6, 	8, 	6, 	0 , 0,LO(WARNING), 0),	// 3
     DEFINE_LED(6, 	9, 	10, 0 , LF(ARM_STATE), 0, 0),		// 4
     DEFINE_LED(5, 	10, 12, 	0 , LF(GPS), 0, 0),			// 5
 	DEFINE_LED(9, 	5, 	12, 	0 , LF(GPS), 0, 0),			// 6
     DEFINE_LED(8, 	6, 	10, 0 , LF(ARM_STATE), 0, 0),		// 7 
-    DEFINE_LED(8, 	7, 	6, 	0 , 0,LO(LARSON_SCANNER), 0),	// 8
-    DEFINE_LED(8, 	8, 	6, 	0 , 0,LO(LARSON_SCANNER), 0),	// 9 
+    DEFINE_LED(8, 	7, 	6, 	0 , 0,LO(WARNING), 0),	// 8
+    DEFINE_LED(8, 	8, 	6, 	0 , 0,LO(WARNING), 0),	// 9 
     DEFINE_LED(8, 	9, 	10, 0 , LF(ARM_STATE), 0, 0),		// 10
     DEFINE_LED(9, 	10,	12, 	0 , LF(GPS), 0, 0),			// 11
-    DEFINE_LED(12, 	5, 	12, 	0 , LF(GPS), 0, 0),			// 12
-    DEFINE_LED(11, 	6, 	10, 0 , LF(ARM_STATE), 0, 0),		// 13
-    DEFINE_LED(11,	7, 	6, 	0 , 0,LO(LARSON_SCANNER), 0),	// 14
-    DEFINE_LED(11, 	8, 	6, 	0 , 0,LO(LARSON_SCANNER), 0),	// 15
-    DEFINE_LED(11, 	9, 	10, 0 , LF(ARM_STATE), 0, 0),		// 16
-    DEFINE_LED(12, 10, 	12, 	0 , LF(GPS), 0, 0),			// 17
-    DEFINE_LED(2, 	5, 	12, 	0 , LF(GPS), 0, 0),			// 18
-    DEFINE_LED(3, 	6, 	10, 0 , LF(ARM_STATE), 0, 0),		// 19
-    DEFINE_LED(3, 	7, 	6, 	0 , 0,LO(LARSON_SCANNER), 0),	// 20
-    DEFINE_LED(3, 	8, 	6, 	0 , 0,LO(LARSON_SCANNER), 0),	// 21
-    DEFINE_LED(3, 	9, 	10, 0 , LF(ARM_STATE), 0, 0),		// 22
-    DEFINE_LED(2, 	10, 12, 0 , LF(GPS), 0, 0),			// 23
+    DEFINE_LED(2, 	5, 	12, 	0 , LF(GPS), 0, 0),			// 12
+    DEFINE_LED(3, 	6, 	10, 0 , LF(ARM_STATE), 0, 0),		// 13
+    DEFINE_LED(3,	7, 	6, 	0 , 0,LO(WARNING), 0),	// 14
+    DEFINE_LED(3, 	8, 	6, 	0 , 0,LO(WARNING), 0),	// 15
+    DEFINE_LED(3, 	9, 	10, 0 , LF(ARM_STATE), 0, 0),		// 16
+    DEFINE_LED(2, 10, 	12, 	0 , LF(GPS), 0, 0),			// 17
+    DEFINE_LED(12, 	5, 	12, 	0 , LF(GPS), 0, 0),			// 18
+    DEFINE_LED(11, 	6, 	10, 0 , LF(ARM_STATE), 0, 0),		// 19
+    DEFINE_LED(11, 	7, 	6, 	0 , 0,LO(WARNING), 0),	// 20
+    DEFINE_LED(11, 	8, 	6, 	0 , 0,LO(WARNING), 0),	// 21
+    DEFINE_LED(11, 	9, 	10, 0 , LF(ARM_STATE), 0, 0),		// 22
+    DEFINE_LED(12, 	10, 12, 0 , LF(GPS), 0, 0),			// 23
     
    
 };

@@ -23,7 +23,7 @@
 #define LED0                    PB3
 #define LED1                    PB4
 
-//#define BEEPER                  PA12
+#define BEEPER                  PA12
 #ifdef AFROMINI
 #define BEEPER_INVERTED
 #endif
@@ -113,10 +113,10 @@
 
 #define USE_UART1
 #define USE_UART2
-#define USE_UART3
-#define USE_SOFTSERIAL1
-#define USE_SOFTSERIAL2
-#define SERIAL_PORT_COUNT       5
+//#define USE_UART3
+//#define USE_SOFTSERIAL1
+//#define USE_SOFTSERIAL2
+#define SERIAL_PORT_COUNT       2
 
 #define SOFTSERIAL_1_TIMER      TIM3
 #define SOFTSERIAL_1_TIMER_RX_HARDWARE 4 // PWM 5
@@ -128,6 +128,8 @@
 // USART3 only on NAZE32_SP - Flex Port
 #define UART3_RX_PIN            PB11
 #define UART3_TX_PIN            PB10
+
+#define RX_CHANNELS_TAER
 
 #define USE_I2C
 #define I2C_DEVICE (I2CDEV_2)

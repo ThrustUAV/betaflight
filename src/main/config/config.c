@@ -83,7 +83,7 @@
 #endif
 
 #define BRUSHED_MOTORS_PWM_RATE 16000
-#define BRUSHLESS_MOTORS_PWM_RATE 400
+#define BRUSHLESS_MOTORS_PWM_RATE 1000
 
 
 master_t masterConfig;                 // master config struct with data independent from profiles
@@ -166,7 +166,7 @@ void resetNavConfig(navConfig_t * navConfig)
     navConfig->general.flags.user_control_mode = NAV_GPS_ATTI;
     navConfig->general.flags.rth_alt_control_mode = NAV_RTH_AT_LEAST_ALT;
     navConfig->general.flags.rth_climb_first = 1;                         // Climb first, turn after reaching safe altitude
-    navConfig->general.flags.rth_tail_first = 0;
+    navConfig->general.flags.rth_tail_first = 1;
     navConfig->general.flags.disarm_on_landing = 0;
 
     // Inertial position estimator parameters
@@ -260,11 +260,11 @@ void resetMotorConfig(motorConfig_t *motorConfig)
     motorConfig->motorPwmProtocol = PWM_TYPE_BRUSHED;
     motorConfig->motorPwmRate = BRUSHED_MOTORS_PWM_RATE;
 #else
-    motorConfig->minthrottle = 1150;
-    motorConfig->motorPwmProtocol = PWM_TYPE_MULTISHOT;
+    motorConfig->minthrottle = 1070;
+    motorConfig->motorPwmProtocol = PWM_TYPE_ONESHOT125;
     motorConfig->motorPwmRate = BRUSHLESS_MOTORS_PWM_RATE;
 #endif
-    motorConfig->maxthrottle = 1850;
+    motorConfig->maxthrottle = 1995;
     motorConfig->mincommand = 1000;
 
 }
@@ -314,7 +314,7 @@ void resetBatteryConfig(batteryConfig_t *batteryConfig)
     batteryConfig->vbatresdivmultiplier = VBAT_RESDIVMULTIPLIER_DEFAULT;
     batteryConfig->vbatmaxcellvoltage = 43;
     batteryConfig->vbatmincellvoltage = 33;
-    batteryConfig->vbatwarningcellvoltage = 35;
+    batteryConfig->vbatwarningcellvoltage = 37;
     batteryConfig->currentMeterOffset = 0;
     batteryConfig->currentMeterScale = 400; // for Allegro ACS758LCB-100U (40mV/A)
     batteryConfig->batteryCapacity = 0;
@@ -337,13 +337,14 @@ void resetSerialConfig(serialConfig_t *serialConfig)
     for (index = 0; index < SERIAL_PORT_COUNT; index++) {
         serialConfig->portConfigs[index].identifier = serialPortIdentifiers[index];
         serialConfig->portConfigs[index].msp_baudrateIndex = BAUD_115200;
-        serialConfig->portConfigs[index].gps_baudrateIndex = BAUD_38400;
+        serialConfig->portConfigs[index].gps_baudrateIndex = BAUD_115200;
         serialConfig->portConfigs[index].telemetry_baudrateIndex = BAUD_AUTO;
         serialConfig->portConfigs[index].blackbox_baudrateIndex = BAUD_115200;
     }
 
     serialConfig->portConfigs[0].functionMask = FUNCTION_MSP;
 	serialConfig->portConfigs[1].functionMask = FUNCTION_GPS;
+	//serialConfig->portConfigs[index].gps_baudrateIndex = BAUD_115200;
 
 #ifdef CC3D
     // This allows MSP connection via USART & VCP so the board can be reconfigured.
@@ -499,8 +500,8 @@ static void resetConf(void)
     accelerometerConfig()->acc_align = ALIGN_DEFAULT;
     compassConfig()->mag_align = ALIGN_DEFAULT;
 
-    boardAlignment()->rollDeciDegrees = 0;
-    boardAlignment()->pitchDeciDegrees = 1800;
+    boardAlignment()->rollDeciDegrees = 1800;
+    boardAlignment()->pitchDeciDegrees = 0;
     boardAlignment()->yawDeciDegrees = 0;
 
     gyroConfig()->gyroMovementCalibrationThreshold = 32;

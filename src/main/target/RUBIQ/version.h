@@ -16,9 +16,33 @@
  */
 
 #define FC_VERSION_THRUST_DEV_LEVEL_MAJOR 0 //increment when a significant change is made
-#define FC_VERSION_THRUST_DEV_LEVEL_MINOR 1 //increment when a bug is fixed
+#define FC_VERSION_THRUST_DEV_LEVEL_MINOR 2c //increment when a bug is fixed
 
 /* Version Log
+
+Version 0.2a
+- Changed return to home to use tail orientation
+
+
+Version 0.2
+Fixed Intial
+
+- Port count reduced from 3 -> 2
+ -- UART3 has been removed
+ -- UART2 GPS Baudrate has been increased to 115200
+ 
+- Beeper has been turned on
+
+- Motor protocol has been changed from MULTISHOT to ONESHOT125
+- Min throttle has been changed to 1045
+- Max throttle has been changed to 1995
+
+- Reciever mapping has been set to TAER1234 by default
+
+- Yaw has been changed 0->180.0
+
+
+
 Version 0.1
 Initial Update
 
