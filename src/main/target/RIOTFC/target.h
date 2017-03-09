@@ -98,7 +98,7 @@
 //#define RFM22B_CS_PIN           PA15
 //#define RFM22B_SPI_INSTANCE     SPI3
 	
-	
+/*	
 #define USE_SDCARD
 
 //#define SDCARD_DETECT_INVERTED
@@ -117,7 +117,7 @@
 #define SDCARD_DMA_CHANNEL_TX_COMPLETE_FLAG DMA_FLAG_TCIF5
 #define SDCARD_DMA_CLK                      RCC_AHB1Periph_DMA1
 #define SDCARD_DMA_CHANNEL                  DMA_Channel_0
-
+*/
 
 	
 #define USEMULTISHOT125	

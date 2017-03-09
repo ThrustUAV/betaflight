@@ -27,7 +27,7 @@ void targetConfiguration(master_t *config)
 {
 	// Motor Configurations
 	// 3 = PWM_TYPE_MULTISHOT
-	config->motorConfig.motorPwmProtocol = 3;
+	config->motorConfig.dev.motorPwmProtocol = 3;
 	config->motorConfig.minthrottle = 1040;
 	
 	//Smartport Configurations

@@ -101,9 +101,9 @@ HSE_VALUE       ?= 8000000
 # used for turning on features like VCP and SDCARD
 FEATURES        =
 
-SAMPLE_TARGETS  = ALIENFLIGHTF3 ALIENFLIGHTF4 ANYFCF7 BETAFLIGHTF3 BLUEJAYF4 CC3D FURYF4 NAZE REVO SIRINFPV SPARKY SPRACINGF3 SPRACINGF3EVO STM32F3DISCOVERY
-ALT_TARGETS     = $(sort $(filter-out target, $(basename $(notdir $(wildcard $(ROOT)/src/main/target/*/*.mk)))))
-OPBL_TARGETS    = $(filter %_OPBL, $(ALT_TARGETS))
+OFFICIAL_TARGETS  = ALIENFLIGHTF3 ALIENFLIGHTF4 ANYFCF7 BETAFLIGHTF3 BLUEJAYF4 CC3D FURYF4 NAZE REVO SIRINFPV SPARKY SPRACINGF3 SPRACINGF3EVO STM32F3DISCOVERY
+ALT_TARGETS       = $(sort $(filter-out target, $(basename $(notdir $(wildcard $(ROOT)/src/main/target/*/*.mk)))))
+OPBL_TARGETS      = $(filter %_OPBL, $(ALT_TARGETS))
 
 VALID_TARGETS   = $(dir $(wildcard $(ROOT)/src/main/target/*/target.mk))
 VALID_TARGETS  := $(subst /,, $(subst ./src/main/target/,, $(VALID_TARGETS)))
@@ -124,7 +124,7 @@ endif
 # silently ignore if the file is not present. Allows for target specific.
 -include $(ROOT)/src/main/target/$(BASE_TARGET)/target.mk
 
-F4_TARGETS      = $(F405_TARGETS) $(F411_TARGETS)
+F4_TARGETS      = $(F405_TARGETS) $(F411_TARGETS) $(F446_TARGETS)
 F7_TARGETS      = $(F7X2RE_TARGETS) $(F7X5XE_TARGETS) $(F7X5XG_TARGETS) $(F7X5XI_TARGETS) $(F7X6XG_TARGETS)
 
 ifeq ($(filter $(TARGET),$(VALID_TARGETS)),)
@@ -137,7 +137,7 @@ endif
 
 128K_TARGETS  = $(F1_TARGETS)
 256K_TARGETS  = $(F3_TARGETS)
-512K_TARGETS  = $(F411_TARGETS) $(F7X2RE_TARGETS) $(F7X5XE_TARGETS)
+512K_TARGETS  = $(F411_TARGETS) $(F446_TARGETS) $(F7X2RE_TARGETS) $(F7X5XE_TARGETS)
 1024K_TARGETS = $(F405_TARGETS) $(F7X5XG_TARGETS) $(F7X6XG_TARGETS)
 2048K_TARGETS = $(F7X5XI_TARGETS)
 
@@ -265,6 +265,10 @@ ifeq ($(TARGET),$(filter $(TARGET), $(F411_TARGETS)))
 EXCLUDES        += stm32f4xx_fsmc.c
 endif
 
+ifeq ($(TARGET),$(filter $(TARGET), $(F446_TARGETS)))
+EXCLUDES        += stm32f4xx_fsmc.c
+endif
+
 STDPERIPH_SRC   := $(filter-out ${EXCLUDES}, $(STDPERIPH_SRC))
 
 #USB
@@ -321,6 +325,10 @@ else ifeq ($(TARGET),$(filter $(TARGET),$(F405_TARGETS)))
 DEVICE_FLAGS    = -DSTM32F40_41xxx
 LD_SCRIPT       = $(LINKER_DIR)/stm32_flash_f405.ld
 STARTUP_SRC     = startup_stm32f40xx.s
+else ifeq ($(TARGET),$(filter $(TARGET),$(F446_TARGETS)))
+DEVICE_FLAGS    = -DSTM32F446xx
+LD_SCRIPT       = $(LINKER_DIR)/stm32_flash_f446.ld
+STARTUP_SRC     = startup_stm32f446xx.s
 else
 $(error Unknown MCU for F4 target)
 endif
@@ -584,11 +592,13 @@ COMMON_SRC = \
             drivers/rx_pwm.c \
             drivers/serial.c \
             drivers/serial_uart.c \
+            drivers/serial_softserial.c \
             drivers/sound_beeper.c \
             drivers/stack_check.c \
             drivers/system.c \
             drivers/timer.c \
             fc/config.c \
+            fc/controlrate_profile.c \
             fc/fc_init.c \
             fc/fc_dispatch.c \
             fc/fc_hardfaults.c \
@@ -636,6 +646,7 @@ COMMON_SRC = \
             sensors/boardalignment.c \
             sensors/compass.c \
             sensors/gyro.c \
+            sensors/gyroanalyse.c \
             sensors/initialisation.c \
             blackbox/blackbox.c \
             blackbox/blackbox_io.c \
@@ -652,9 +663,9 @@ COMMON_SRC = \
             drivers/display_ug2864hsweg01.c \
             drivers/light_ws2811strip.c \
             drivers/serial_escserial.c \
-            drivers/serial_softserial.c \
             drivers/sonar_hcsr04.c \
             drivers/vtx_common.c \
+            drivers/transponder_ir.c \
             flight/navigation.c \
             io/dashboard.c \
             io/displayport_max7456.c \
@@ -663,6 +674,7 @@ COMMON_SRC = \
             io/gps.c \
             io/ledstrip.c \
             io/osd.c \
+            io/transponder_ir.c \
             sensors/sonar.c \
             sensors/barometer.c \
             telemetry/telemetry.c \
@@ -742,6 +754,7 @@ SPEED_OPTIMISED_SRC := $(SPEED_OPTIMISED_SRC) \
             sensors/acceleration.c \
             sensors/boardalignment.c \
             sensors/gyro.c \
+            sensors/gyroanalyse.c \
             $(CMSIS_SRC) \
             $(DEVICE_STDPERIPH_SRC) \
             drivers/display_ug2864hsweg01.c \
@@ -778,13 +791,15 @@ VCP_SRC = \
             vcpf4/usbd_desc.c \
             vcpf4/usbd_usr.c \
             vcpf4/usbd_cdc_vcp.c \
-            drivers/serial_usb_vcp.c
+            drivers/serial_usb_vcp.c \
+            drivers/usb_io.c
 else ifeq ($(TARGET),$(filter $(TARGET),$(F7_TARGETS)))
 VCP_SRC = \
             vcp_hal/usbd_desc.c \
             vcp_hal/usbd_conf.c \
             vcp_hal/usbd_cdc_interface.c \
-            drivers/serial_usb_vcp.c
+            drivers/serial_usb_vcp.c \
+            drivers/usb_io.c
 else
 VCP_SRC = \
             vcp/hw_config.c \
@@ -804,7 +819,7 @@ STM32F10x_COMMON_SRC = \
             drivers/dma.c \
             drivers/gpio_stm32f10x.c \
             drivers/inverter.c \
-            drivers/light_ws2811strip_stm32f10x.c \
+            drivers/light_ws2811strip_stdperiph.c \
             drivers/serial_uart_stm32f10x.c \
             drivers/system_stm32f10x.c \
             drivers/timer_stm32f10x.c
@@ -815,8 +830,8 @@ STM32F30x_COMMON_SRC = \
             drivers/bus_i2c_stm32f30x.c \
             drivers/dma.c \
             drivers/gpio_stm32f30x.c \
-            drivers/light_ws2811strip_stm32f30x.c \
-            drivers/pwm_output_stm32f3xx.c \
+            drivers/light_ws2811strip_stdperiph.c \
+            drivers/pwm_output_dshot.c \
             drivers/serial_uart_stm32f30x.c \
             drivers/system_stm32f30x.c \
             drivers/timer_stm32f30x.c
@@ -829,8 +844,8 @@ STM32F4xx_COMMON_SRC = \
             drivers/dma_stm32f4xx.c \
             drivers/gpio_stm32f4xx.c \
             drivers/inverter.c \
-            drivers/light_ws2811strip_stm32f4xx.c \
-            drivers/pwm_output_stm32f4xx.c \
+            drivers/light_ws2811strip_stdperiph.c \
+            drivers/pwm_output_dshot.c \
             drivers/serial_uart_stm32f4xx.c \
             drivers/system_stm32f4xx.c \
             drivers/timer_stm32f4xx.c
@@ -866,6 +881,25 @@ TARGET_SRC := $(STARTUP_SRC) $(STM32F30x_COMMON_SRC) $(TARGET_SRC)
 else ifeq ($(TARGET),$(filter $(TARGET),$(F1_TARGETS)))
 TARGET_SRC := $(STARTUP_SRC) $(STM32F10x_COMMON_SRC) $(TARGET_SRC)
 endif
+
+ifneq ($(filter $(TARGET),$(F4_TARGETS) $(F7_TARGETS)),)
+DSPLIB := $(ROOT)/lib/main/DSP_Lib
+DEVICE_FLAGS += -DARM_MATH_CM4 -DARM_MATH_MATRIX_CHECK -DARM_MATH_ROUNDING -D__FPU_PRESENT=1 -DUNALIGNED_SUPPORT_DISABLE
+
+INCLUDE_DIRS += $(DSPLIB)/Include
+
+TARGET_SRC += $(DSPLIB)/Source/TransformFunctions/arm_rfft_fast_f32.c
+TARGET_SRC += $(DSPLIB)/Source/TransformFunctions/arm_cfft_f32.c
+TARGET_SRC += $(DSPLIB)/Source/TransformFunctions/arm_rfft_fast_init_f32.c
+TARGET_SRC += $(DSPLIB)/Source/TransformFunctions/arm_cfft_radix8_f32.c
+TARGET_SRC += $(DSPLIB)/Source/CommonTables/arm_common_tables.c
+
+TARGET_SRC += $(DSPLIB)/Source/ComplexMathFunctions/arm_cmplx_mag_f32.c
+TARGET_SRC += $(DSPLIB)/Source/StatisticsFunctions/arm_max_f32.c
+
+TARGET_SRC += $(wildcard $(DSPLIB)/Source/*/*.S)
+endif
+
 
 ifneq ($(filter ONBOARDFLASH,$(FEATURES)),)
 TARGET_SRC += \
@@ -1066,8 +1100,8 @@ $(OBJECT_DIR)/$(TARGET)/%.o: %.S
 	$(V1) echo "%% $(notdir $<)" "$(STDOUT)"
 	$(V1) $(CROSS_CC) -c -o $@ $(ASFLAGS) $<
 
-## sample            : Build all sample (travis) targets
-sample: $(SAMPLE_TARGETS)
+## official            : Build all official (travis) targets
+official: $(OFFICIAL_TARGETS)
 
 ## all               : Build all valid targets
 all: $(VALID_TARGETS)
