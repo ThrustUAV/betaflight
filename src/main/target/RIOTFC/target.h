@@ -17,49 +17,27 @@
 
 #pragma once
 #define TARGET_BOARD_IDENTIFIER "RIOTFC"
-#define TARGET_CONFIG
-
-#define CONFIG_START_FLASH_ADDRESS 0x08080000 //0x08080000 to 0x080A0000 (FLASH_Sector_8)
 
 #define USBD_PRODUCT_STRING "Riot FC"
 #ifdef OPBL
-	#define USBD_SERIALNUMBER_STRING "0x8020000"
+    #define USBD_SERIALNUMBER_STRING "0x8020000"
 #endif
-
 
 #define LED0                    PB5
 #define LED1                    PB4
 #define LED2                    PB6
 
-#define BEEPER                  PC9
 
-#define INVERTER                PC6
-#define INVERTER_USART          USART6
+#define INVERTER_PIN_UART6      PC6
+
+#define USE_ESC_SENSOR
 
 // MPU9250 interrupt
 #define USE_EXTI
 #define MPU_INT_EXTI            PC5
-#define EXTI_CALLBACK_HANDLER_COUNT 1 // MPU data ready
 //#define DEBUG_MPU_DATA_READY_INTERRUPT
 #define USE_MPU_DATA_READY_SIGNAL
 #define ENSURE_MPU_DATA_READY_IS_LOW
-
- /*
-#define MPU6500_CS_PIN          PC4
-#define MPU6500_SPI_INSTANCE    SPI1
-
-#define ACC
-#define USE_ACC_SPI_MPU6500
-#define ACC_MPU6500_ALIGN       CW270_DEG
-
-#define GYRO
-#define defaultRoll		0
-#define defaultPitch	180
-#define defaultYaw		270
-#define USE_GYRO_SPI_MPU6500
-#define GYRO_MPU6500_ALIGN      CW270_DEG
- 
-*/ 
 
 #define MPU6000_CS_PIN          PC4
 #define MPU6000_SPI_INSTANCE    SPI1
@@ -69,14 +47,8 @@
 #define ACC_MPU6000_ALIGN       CW270_DEG
 
 #define GYRO
-	
-#define defaultRoll		0
-#define defaultPitch	180
-#define defaultYaw		270
-	
 #define USE_GYRO_SPI_MPU6000
 #define GYRO_MPU6000_ALIGN      CW270_DEG
-
 
 #define MAG
 //#define USE_MAG_HMC5883
@@ -87,53 +59,22 @@
 
 #define BARO
 #define USE_BARO_MS5611
-#define MS5611_I2C_INSTANCE I2CDEV_1
-
 //#define USE_BARO_BMP280
 
-// Flash Chip Defines
 //#define M25P16_CS_PIN           PB3
 //#define M25P16_SPI_INSTANCE     SPI3
 
 //#define RFM22B_CS_PIN           PA15
 //#define RFM22B_SPI_INSTANCE     SPI3
-	
-/*	
-#define USE_SDCARD
-
-//#define SDCARD_DETECT_INVERTED
-
-//#define SDCARD_DETECT_PIN                   PB3
-#define SDCARD_SPI_INSTANCE                 SPI3
-#define SDCARD_SPI_CS_PIN                   PB3
-
-// SPI2 is on the APB1 bus whose clock runs at 84MHz. Divide to under 400kHz for init:
-#define SDCARD_SPI_INITIALIZATION_CLOCK_DIVIDER 256 // 328kHz
-// Divide to under 25MHz for normal operation:
-#define SDCARD_SPI_FULL_SPEED_CLOCK_DIVIDER     4 // 21MHz
-
-
-#define SDCARD_DMA_CHANNEL_TX               DMA1_Stream5
-#define SDCARD_DMA_CHANNEL_TX_COMPLETE_FLAG DMA_FLAG_TCIF5
-#define SDCARD_DMA_CLK                      RCC_AHB1Periph_DMA1
-#define SDCARD_DMA_CHANNEL                  DMA_Channel_0
-*/
-
-	
-#define USEMULTISHOT125	
-	
-	
-#define USE_DSHOT	
-	
-	
-	
 
 //#define USE_FLASHFS
 //#define USE_FLASH_M25P16
 //#define USE_FLASH_TOOLS
 
 #define USE_VCP
+//#define USE_MSP_UART
 #define VBUS_SENSING_PIN        PA8
+#define USB_DETECT_PIN 			PA8
 
 #define USE_UART1
 #define UART1_RX_PIN            PA10
@@ -148,7 +89,13 @@
 #define UART6_RX_PIN            PC7
 #define UART6_TX_PIN            PC6 //inverter
 
-#define SERIAL_PORT_COUNT 4
+#define USE_SOFTSERIAL1
+#define USE_SOFTSERIAL2
+
+#define SERIAL_PORT_COUNT 6
+
+//#define USE_ESCSERIAL
+//#define ESCSERIAL_TIMER_TX_HARDWARE 0 // PWM 1
 
 #define USE_SPI
 
@@ -158,49 +105,23 @@
 #define SPI1_MISO_PIN           PA6
 #define SPI1_MOSI_PIN           PA7
 
-#define USE_SPI_DEVICE_3 // SDCard SPI
+#define USE_SPI_DEVICE_3 //dataflash
 #define SPI3_NSS_PIN            PB3
 #define SPI3_SCK_PIN            PC10
 #define SPI3_MISO_PIN           PC11
 #define SPI3_MOSI_PIN           PC12
 
 #define USE_I2C
+#define USE_I2C_DEVICE_1
 #define I2C_DEVICE              (I2CDEV_1)
-//#define I2C_DEVICE_EXT          (I2CDEV_2)
-
-//MS5611 SPI pin defines
-#define I2C1_SCL                PB8
-#define I2C1_SDA                PB9
-
 
 #define USE_ADC
-#define VBAT_SCALE_DEFAULT      53 
-#define BOARD_HAS_VOLTAGE_DIVIDER
+#define VBAT_ADC_PIN            PC3
+#define CURRENT_METER_ADC_PIN   PC2
 
-#define CURRENT_METER_ADC_PIN       PC2
-#define CURRENT_METER_ADC_CHANNEL   ADC_Channel_12
+#undef LED_STRIP
 
-#define VBAT_ADC_PIN           PC3
-#define VBAT_ADC_CHANNEL       ADC_Channel_13
-
-#define LED_STRIP
-#define LED_STRIP_LENGTH 35
-#define RIOTLEDCONFIG
-
-/*
-#define WS2811_PIN                      PA0
-#define WS2811_TIMER                    TIM5
-#define WS2811_DMA_HANDLER_IDENTIFER    DMA1_ST2_HANDLER
-#define WS2811_DMA_STREAM               DMA1_Stream2
-#define WS2811_DMA_IT                   DMA_IT_TCIF2
-#define WS2811_DMA_CHANNEL              DMA_Channel_6
-#define WS2811_TIMER_CHANNEL            TIM_Channel_1
-*/
-	
-#define TELEMETRY
-
-#define DEFAULT_FEATURES        (FEATURE_VBAT | FEATURE_LED_STRIP | FEATURE_AIRMODE | FEATURE_CURRENT_METER | FEATURE_TELEMETRY)
-
+#define DEFAULT_FEATURES        FEATURE_BLACKBOX
 #define DEFAULT_RX_FEATURE      FEATURE_RX_SERIAL
 #define SERIALRX_PROVIDER       SERIALRX_SBUS
 #define SERIALRX_UART           SERIAL_PORT_USART6
@@ -213,4 +134,3 @@
 
 #define USABLE_TIMER_CHANNEL_COUNT 11
 #define USED_TIMERS  ( TIM_N(2) | TIM_N(3) | TIM_N(5) | TIM_N(12) | TIM_N(8) | TIM_N(9))
-
