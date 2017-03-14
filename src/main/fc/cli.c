@@ -48,7 +48,6 @@ extern uint8_t __config_end;
 #include "common/typeconversion.h"
 #include "common/utils.h"
 
-#include "config/config_master.h"
 #include "config/config_eeprom.h"
 #include "config/config_profile.h"
 #include "config/feature.h"
@@ -77,10 +76,12 @@ extern uint8_t __config_end;
 #include "fc/cli.h"
 #include "fc/config.h"
 #include "fc/controlrate_profile.h"
+#include "fc/fc_core.h"
 #include "fc/rc_adjustments.h"
 #include "fc/rc_controls.h"
 #include "fc/runtime_config.h"
 
+#include "flight/altitudehold.h"
 #include "flight/failsafe.h"
 #include "flight/imu.h"
 #include "flight/mixer.h"
@@ -204,7 +205,7 @@ static const char * const sensorTypeNames[] = {
 
 #define SENSOR_NAMES_MASK (SENSOR_GYRO | SENSOR_ACC | SENSOR_BARO | SENSOR_MAG)
 
-static const char * const sensorHardwareNames[4][15] = {
+static const char * const sensorHardwareNames[4][16] = {
     { "", "None", "MPU6050", "L3G4200D", "MPU3050", "L3GD20", "MPU6000", "MPU6500", "MPU9250", "ICM20689", "ICM20608G", "ICM20602", "BMI160", "FAKE", NULL },
     { "", "None", "ADXL345", "MPU6050", "MMA845x", "BMA280", "LSM303DLHC", "MPU6000", "MPU6500", "ICM20689", "MPU9250", "ICM20608G", "ICM20602", "BMI160", "FAKE", NULL },
     { "", "None", "BMP085", "MS5611", "BMP280", NULL },
@@ -736,7 +737,8 @@ static const clivalue_t valueTable[] = {
 
     { "iterm_windup",               VAR_UINT8  | PROFILE_VALUE, .config.minmax = { 30, 100 }, PG_PID_PROFILE, offsetof(pidProfile_t, itermWindupPointPercent) },
     { "yaw_lowpass",                VAR_UINT16 | PROFILE_VALUE, .config.minmax = { 0, 500 }, PG_PID_PROFILE, offsetof(pidProfile_t, yaw_lpf_hz) },
-    { "pidsum_limit",               VAR_FLOAT  | PROFILE_VALUE, .config.minmax = { 0.1, 1.0 }, PG_PID_CONFIG, offsetof(pidProfile_t, pidSumLimit) },
+    { "pidsum_limit",               VAR_FLOAT  | PROFILE_VALUE, .config.minmax = { 0.1, 1.0 }, PG_PID_PROFILE, offsetof(pidProfile_t, pidSumLimit) },
+    { "pidsum_limit_yaw",           VAR_FLOAT  | PROFILE_VALUE, .config.minmax = { 0.1, 1.0 }, PG_PID_PROFILE, offsetof(pidProfile_t, pidSumLimitYaw) },
 
     { "p_pitch",                    VAR_UINT8  | PROFILE_VALUE, .config.minmax = { 0, 200 }, PG_PID_PROFILE, offsetof(pidProfile_t, P8[PITCH]) },
     { "i_pitch",                    VAR_UINT8  | PROFILE_VALUE, .config.minmax = { 0, 200 }, PG_PID_PROFILE, offsetof(pidProfile_t, I8[PITCH]) },
@@ -1261,6 +1263,9 @@ static adjustmentRange_t adjustmentRangesCopy[MAX_ADJUSTMENT_RANGE_COUNT];
 #ifdef LED_STRIP
 static ledStripConfig_t ledStripConfigCopy;
 #endif
+#ifdef USE_SDCARD
+static sdcardConfig_t sdcardConfigCopy;
+#endif
 #ifdef OSD
 static osdConfig_t osdConfigCopy;
 #endif
@@ -1408,7 +1413,7 @@ static void printValuePointer(const clivalue_t *var, const void *valuePointer, u
         }
         break;
     case MODE_LOOKUP:
-        cliPrintf(lookupTables[var->config.lookup.tableIndex].values[value]);
+        cliPrint(lookupTables[var->config.lookup.tableIndex].values[value]);
         break;
     }
 }
@@ -1510,6 +1515,7 @@ static const cliCurrentAndDefaultConfig_t *getCurrentAndDefaultConfigs(pgn_t pgn
     case PG_THROTTLE_CORRECTION_CONFIG:
         ret.currentConfig = &throttleCorrectionConfigCopy;
         ret.defaultConfig = throttleCorrectionConfig();
+        break;
     case PG_FAILSAFE_CONFIG:
         ret.currentConfig = &failsafeConfigCopy;
         ret.defaultConfig = failsafeConfig();
@@ -1582,6 +1588,12 @@ static const cliCurrentAndDefaultConfig_t *getCurrentAndDefaultConfigs(pgn_t pgn
         ret.defaultConfig = ledStripConfig();
         break;
 #endif
+#ifdef USE_SDCARD
+    case PG_SDCARD_CONFIG:
+       ret.currentConfig = &sdcardConfigCopy;
+       ret.defaultConfig = sdcardConfig();
+       break;
+#endif
 #ifdef OSD
     case PG_OSD_CONFIG:
        ret.currentConfig = &osdConfigCopy;
@@ -1640,6 +1652,12 @@ static const cliCurrentAndDefaultConfig_t *getCurrentAndDefaultConfigs(pgn_t pgn
        ret.defaultConfig = beeperDevConfig();
        break;
 #endif
+#ifdef VTX
+    case PG_VTX_CONFIG:
+       ret.currentConfig = &vtxConfigCopy;
+       ret.defaultConfig = vtxConfig();
+       break;
+#endif
 #ifdef USE_MAX7456
     case PG_VCD_CONFIG:
        ret.currentConfig = &vcdProfileCopy;
@@ -1686,7 +1704,7 @@ static uint16_t getValueOffset(const clivalue_t *value)
 static void *getValuePointer(const clivalue_t *value)
 {
     const pgRegistry_t* rec = pgFind(value->pgn);
-    return CONST_CAST(void *, rec + getValueOffset(value));
+    return CONST_CAST(void *, rec->address + getValueOffset(value));
 }
 
 static void dumpPgValue(const clivalue_t *value, uint8_t dumpMask)
@@ -3236,6 +3254,7 @@ static void printVtx(uint8_t dumpMask, const vtxConfig_t *vtxConfig, const vtxCo
     }
 }
 
+#ifdef VTX
 static void cliVtx(char *cmdline)
 {
     int i, val = 0;
@@ -3283,6 +3302,7 @@ static void cliVtx(char *cmdline)
         }
     }
 }
+#endif // VTX
 #endif
 
 static void printName(uint8_t dumpMask)

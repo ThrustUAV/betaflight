@@ -18,19 +18,30 @@
 #include <stdbool.h>
 #include <stdint.h>
 
-#include "platform.h"
+#include <platform.h>
 
-#include "fc/fc_init.h"
+#include "common/axis.h"
 
-#include "scheduler/scheduler.h"
+#include "sensors/battery.h"
+#include "sensors/barometer.h"
+#include "sensors/compass.h"
 
+#include "io/osd.h"
 
-int main(void)
+#define VBAT_SCALE       113
+#define CURRENT_SCALE    1000
+#define CURRENT_OFFSET   0
+
+#define OSD_POS(x,y)  (x | (y << 5))
+
+#ifdef TARGET_CONFIG
+void targetConfiguration(void)
 {
-    init();
-    while (true) {
-        scheduler();
-        processLoopback();
-    }
-    return 0;
+    batteryConfigMutable()->vbatscale = VBAT_SCALE;
+    batteryConfigMutable()->currentMeterScale = CURRENT_SCALE;
+    batteryConfigMutable()->currentMeterOffset = CURRENT_OFFSET;
+    barometerConfigMutable()->baro_hardware = 0;
+    compassConfigMutable()->mag_hardware = 0;
+    osdConfigMutable()->item_pos[OSD_MAIN_BATT_VOLTAGE] = OSD_POS(12, 1) | VISIBLE_FLAG;
 }
+#endif

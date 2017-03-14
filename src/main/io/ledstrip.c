@@ -156,7 +156,6 @@ static const specialColorIndexes_t defaultSpecialColors[] = {
     }}
 };
 
-
 #define LF(name) LED_FUNCTION_ ## name
 #define LO(name) LED_FLAG_OVERLAY(LED_OVERLAY_ ## name)
 #define LD(name) LED_FLAG_DIRECTION(LED_DIRECTION_ ## name)
@@ -262,7 +261,6 @@ void pgResetFn_ledStripConfig(ledStripConfig_t *ledStripConfig)
     }
     ledStripConfig->ioTag = IO_TAG_NONE;
 }
-#endif
 
 static int scaledThrottle;
 static int scaledAux;

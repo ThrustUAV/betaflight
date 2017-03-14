@@ -15,22 +15,30 @@
  * along with Cleanflight.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <stdbool.h>
-#include <stdint.h>
+/*
+ * The ibus_shared module implements the ibus telemetry packet handling
+ * which is shared between the ibus serial rx and the ibus telemetry.
+ *
+ * There is only one 'user' active at any time, serial rx will open the 
+ * serial port if both functions are enabled at the same time 
+ */
+
+#pragma once
 
 #include "platform.h"
+#include "drivers/serial.h"
 
-#include "fc/fc_init.h"
+#define IBUS_CHECKSUM_SIZE (2)
 
-#include "scheduler/scheduler.h"
+#if defined(TELEMETRY) && defined(TELEMETRY_IBUS)
+
+uint8_t respondToIbusRequest(uint8_t const * const ibusPacket);
+void initSharedIbusTelemetry(serialPort_t * port);
+
+#endif //defined(TELEMETRY) && defined(TELEMETRY_IBUS)
 
 
-int main(void)
-{
-    init();
-    while (true) {
-        scheduler();
-        processLoopback();
-    }
-    return 0;
-}
+bool isChecksumOkIa6b(const uint8_t *ibusPacket, const uint8_t length);
+
+
+
