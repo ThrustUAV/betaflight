@@ -33,7 +33,7 @@
 
 #define BEEPER                  PC9
 
-#define INVERTER                PC6
+#define INVERTER_PIN_UART6      PC6
 #define INVERTER_USART          USART6
 
 // MPU9250 interrupt
