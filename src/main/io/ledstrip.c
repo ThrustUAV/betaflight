@@ -207,7 +207,8 @@ static const ledConfig_t defaultLedStripConfig[] = {
 #undef LF
 #undef LO
 
-#ifndef USE_PARAMETER_GROUPS
+
+
 void applyDefaultLedStripConfig(ledConfig_t *ledConfigs)
 {
     memset(ledConfigs, 0, LED_MAX_STRIP_LENGTH * sizeof(ledConfig_t));
@@ -237,11 +238,16 @@ void applyDefaultSpecialColors(specialColorIndexes_t *specialColors)
     memcpy_fn(specialColors, &defaultSpecialColors, sizeof(defaultSpecialColors));
 }
 
-#else
+
 
 void pgResetFn_ledStripConfig(ledStripConfig_t *ledStripConfig)
 {
     memset(ledStripConfig->ledConfigs, 0, LED_MAX_STRIP_LENGTH * sizeof(ledConfig_t));
+	
+	#if defined (RIOTLEDCONFIG)
+	memcpy(ledStripConfig->ledConfigs, &defaultLedStripConfig, sizeof(defaultLedStripConfig));
+	#endif
+	
     // copy hsv colors as default
     memset(ledStripConfig->colors, 0, ARRAYLEN(hsv) * sizeof(hsvColor_t));
     BUILD_BUG_ON(LED_CONFIGURABLE_COLOR_COUNT < ARRAYLEN(hsv));
