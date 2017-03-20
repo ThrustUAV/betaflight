@@ -178,44 +178,44 @@ static const specialColorIndexes_t defaultSpecialColors[] = {
 
 #ifdef RIOTLEDCONFIG
 static const ledConfig_t defaultLedStripConfig[] = {
-    DEFINE_LED(1, 1, 5, 0 , LF(COLOR), 0, 0),	// 0
-	DEFINE_LED(1, 2, 5, 0 , LF(COLOR), 0, 0),	// 1
-    DEFINE_LED(1, 3, 5, 0 , LF(COLOR), 0, 0),	// 2
-    DEFINE_LED(1, 4, 5, 0 , LF(COLOR), 0, 0),	// 3
-    DEFINE_LED(1, 5, 5, 0 , LF(COLOR), 0, 0),	// 4
-    DEFINE_LED(2, 6, 5, 0 , LF(COLOR), 0, 0),	// 5
-    DEFINE_LED(2, 7, 5, 0 , LF(COLOR), 0, 0),	// 6
-    //DEFINE_LED(2, 8, 5, 0 , LF(COLOR), 0, 0),	// 7 // TBD
-    DEFINE_LED(1, 9, 5, 0 , LF(COLOR), 0, 0),	// 8
-    DEFINE_LED(2, 11, 5, 0 , LF(COLOR), 0, 0),	// 9
-    DEFINE_LED(3, 12, 5, 0 , LF(COLOR), 0, 0),	// 10
-    DEFINE_LED(4, 13, 5, 0 , LF(COLOR), 0, 0),	// 11
-    DEFINE_LED(5, 14, 5, 0 , LF(COLOR), 0, 0),	// 12
-    DEFINE_LED(6, 15, 5, 0 , LF(COLOR), 0, 0),	// 13
-    DEFINE_LED(7, 15, 5, 0 , LF(COLOR), 0, 0),	// 14
-    DEFINE_LED(8, 15, 5, 0 , LF(COLOR), 0, 0),	// 15
-    DEFINE_LED(9, 15, 5, 0 , LF(COLOR), 0, 0),	// 16
-    DEFINE_LED(10, 14, 5, 0 , LF(COLOR), 0, 0),	// 17
-    DEFINE_LED(11, 13, 5, 0 , LF(COLOR), 0, 0),	// 18
-    DEFINE_LED(12, 12, 5, 0 , LF(COLOR), 0, 0),	// 19
-    DEFINE_LED(13, 11, 5, 0 , LF(COLOR), 0, 0),	// 20
-    DEFINE_LED(14, 10, 5, 0 , LF(COLOR), 0, 0),	// 21
-    DEFINE_LED(13, 9, 5, 0 , LF(COLOR), 0, 0),	// 22
-    DEFINE_LED(13, 8, 5, 0 , LF(COLOR), 0, 0),	// 23
-    //DEFINE_LED(13, 7, 5, 0 , LF(COLOR), 0, 0),	// 24  //TBD
-    DEFINE_LED(14, 7, 5, 0 , LF(COLOR), 0, 0),	// 25
-    DEFINE_LED(14, 6, 5, 0 , LF(COLOR), 0, 0),	// 26
-    DEFINE_LED(15, 5, 5, 0 , LF(COLOR), 0, 0),	// 27
-    DEFINE_LED(15, 4, 5, 0 , LF(COLOR), 0, 0),	// 28
-    DEFINE_LED(15, 3, 5, 0 , LF(COLOR), 0, 0),	// 29
-    DEFINE_LED(15, 2, 5, 0 , LF(COLOR), 0, 0),	// 30
-    DEFINE_LED(15, 1, 5, 0 , LF(COLOR), 0, 0),	// 31
-    DEFINE_LED(6, 4, 5, 0 , LF(COLOR), 0, 0),	// 32
-    DEFINE_LED(9, 4, 5, 0 , LF(COLOR), 0, 0),	// 33
-    DEFINE_LED(7, 5, 5, 0 , LF(COLOR), 0, 0),	// 34
-    //DEFINE_LED(7, 6, 5, 0 , LF(COLOR), 0, 0),	// 35  //TBD
-    DEFINE_LED(7, 9, 5, 0 , LF(COLOR), 0, 0),	// 36
-	DEFINE_LED(7, 11, 5, 0 , LF(COLOR), 0, 0),	// 37
+    DEFINE_LED(1, 1, 6, 0 , LF(COLOR), 0, 0),	// 0
+	DEFINE_LED(1, 2, 6, 0 , LF(COLOR), 0, 0),	// 1
+    DEFINE_LED(1, 3, 6, 0 , LF(COLOR), 0, 0),	// 2
+    DEFINE_LED(1, 4, 6, 0 , LF(COLOR), 0, 0),	// 3
+    DEFINE_LED(1, 5, 6, 0 , LF(COLOR), 0, 0),	// 4
+    DEFINE_LED(2, 6, 6, 0 , LF(COLOR), 0, 0),	// 5
+    DEFINE_LED(2, 7, 6, 0 , LF(COLOR), 0, 0),	// 6
+    //DEFINE_LED(2, 8, 6, 0 , LF(COLOR), 0, 0),		// 7	// These LEDs have been removed from the design
+    DEFINE_LED(1, 9, 6, 0 , LF(COLOR), 0, 0),	// 8
+    DEFINE_LED(2, 11, 6, 0 , LF(COLOR), 0, 0),	// 9
+    DEFINE_LED(3, 12, 6, 0 , LF(COLOR), 0, 0),	// 10
+    DEFINE_LED(4, 13, 6, 0 , LF(COLOR), 0, 0),	// 11
+    DEFINE_LED(5, 14, 6, 0 , LF(COLOR), 0, 0),	// 12
+    DEFINE_LED(6, 15, 6, 0 , LF(COLOR), 0, 0),	// 13
+    DEFINE_LED(7, 15, 6, 0 , LF(COLOR), 0, 0),	// 14
+    DEFINE_LED(8, 15, 6, 0 , LF(COLOR), 0, 0),	// 15
+    DEFINE_LED(9, 15, 6, 0 , LF(COLOR), 0, 0),	// 16
+    DEFINE_LED(10, 14, 6, 0 , LF(COLOR), 0, 0),	// 17
+    DEFINE_LED(11, 13, 6, 0 , LF(COLOR), 0, 0),	// 18
+    DEFINE_LED(12, 12, 6, 0 , LF(COLOR), 0, 0),	// 19
+    DEFINE_LED(13, 11, 6, 0 , LF(COLOR), 0, 0),	// 20
+    DEFINE_LED(14, 10, 6, 0 , LF(COLOR), 0, 0),	// 21
+    DEFINE_LED(13, 9, 6, 0 , LF(COLOR), 0, 0),	// 22
+    DEFINE_LED(13, 8, 6, 0 , LF(COLOR), 0, 0),	// 23
+    //DEFINE_LED(13, 7, 6, 0 , LF(COLOR), 0, 0),	// 24  	// These LEDs have been removed from the design
+    DEFINE_LED(14, 7, 6, 0 , LF(COLOR), 0, 0),	// 25
+    DEFINE_LED(14, 6, 6, 0 , LF(COLOR), 0, 0),	// 26
+    DEFINE_LED(15, 5, 6, 0 , LF(COLOR), 0, 0),	// 27
+    DEFINE_LED(15, 4, 6, 0 , LF(COLOR), 0, 0),	// 28
+    DEFINE_LED(15, 3, 6, 0 , LF(COLOR), 0, 0),	// 29
+    DEFINE_LED(15, 2, 6, 0 , LF(COLOR), 0, 0),	// 30
+    DEFINE_LED(15, 1, 6, 0 , LF(COLOR), 0, 0),	// 31
+    DEFINE_LED(6, 4, 6, 0 , LF(COLOR), 0, 0),	// 32
+    DEFINE_LED(9, 4, 6, 0 , LF(COLOR), 0, 0),	// 33
+    DEFINE_LED(7, 5, 6, 0 , LF(COLOR), 0, 0),	// 34
+    //DEFINE_LED(7, 6, 6, 0 , LF(COLOR), 0, 0),		// 35  	// These LEDs have been removed from the design
+    DEFINE_LED(7, 9, 6, 0 , LF(COLOR), 0, 0),	// 36
+	DEFINE_LED(7, 11, 6, 0 , LF(COLOR), 0, 0),	// 37
 };
 #endif
 

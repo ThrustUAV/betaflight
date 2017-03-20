@@ -15,10 +15,18 @@
  * along with Cleanflight.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#define FC_VERSION_THRUST_DEV_LEVEL_MAJOR 0 //increment when a significant change is made
-#define FC_VERSION_THRUST_DEV_LEVEL_MINOR 8 //increment when a bug is fixed
+#define FC_VERSION_THRUST_DEV_LEVEL_MAJOR 1 //increment when a significant change is made
+#define FC_VERSION_THRUST_DEV_LEVEL_MINOR 0 //increment when a bug is fixed
 
 /* Version Log
+Version 1.0
+Updated Overall Functions and Defaults
+ -Updated LED counts to account for removal of LEDs 7, 24, 35
+ -Updated LED color to dictate major changes
+ -Updated default mapping to SPEKTRUM Mapping (TAER1234)
+ -Removed SD Card feature
+
+
 Version 0.8
 Updated Defaults
  -Updated initial port defines

@@ -33,7 +33,7 @@
 
 #define BEEPER                  PC9
 
-#define INVERTER                PC6
+#define INVERTER_PIN_USART6 	PC6
 #define INVERTER_USART          USART6
 
 // MPU9250 interrupt
@@ -98,7 +98,11 @@
 //#define RFM22B_CS_PIN           PA15
 //#define RFM22B_SPI_INSTANCE     SPI3
 	
-	
+/*	
+	SD CARD Disabled until further notice
+*/
+
+/*
 #define USE_SDCARD
 
 //#define SDCARD_DETECT_INVERTED
@@ -118,7 +122,7 @@
 #define SDCARD_DMA_CLK                      RCC_AHB1Periph_DMA1
 #define SDCARD_DMA_CHANNEL                  DMA_Channel_0
 
-
+*/
 	
 #define USEMULTISHOT125	
 	
@@ -204,12 +208,14 @@
 #define DEFAULT_RX_FEATURE      FEATURE_RX_SERIAL
 #define SERIALRX_PROVIDER       SERIALRX_SBUS
 #define SERIALRX_UART           SERIAL_PORT_USART6
+#define RX_CHANNELS_TAER
 
 #define USE_SERIAL_4WAY_BLHELI_INTERFACE
 
 #define TARGET_IO_PORTA 0xffff
 #define TARGET_IO_PORTB 0xffff
 #define TARGET_IO_PORTC 0xffff
+
 
 #define USABLE_TIMER_CHANNEL_COUNT 11
 #define USED_TIMERS  ( TIM_N(2) | TIM_N(3) | TIM_N(5) | TIM_N(12) | TIM_N(8) | TIM_N(9))
