@@ -283,6 +283,10 @@ void compassUpdate(timeUs_t currentTimeUs, flightDynamicsTrims_t *magZero)
     }
 
     if (calStartedAt != 0) {
+		//Introduced beeping throughout the duration of the configuration to let users know that 30s 
+		//have begun and that the copter should be rotated along all axis
+		beeperConfirmationBeeps(2);
+		
         if ((currentTimeUs - calStartedAt) < 30000000) {    // 30s: you have 30s to turn the multi in all directions
             LED0_TOGGLE;
 
