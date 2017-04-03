@@ -337,7 +337,7 @@ void resetSerialConfig(serialConfig_t *serialConfig)
     for (index = 0; index < SERIAL_PORT_COUNT; index++) {
         serialConfig->portConfigs[index].identifier = serialPortIdentifiers[index];
         serialConfig->portConfigs[index].msp_baudrateIndex = BAUD_115200;
-        serialConfig->portConfigs[index].gps_baudrateIndex = BAUD_115200;
+        serialConfig->portConfigs[index].gps_baudrateIndex = BAUD_9600;
         serialConfig->portConfigs[index].telemetry_baudrateIndex = BAUD_AUTO;
         serialConfig->portConfigs[index].blackbox_baudrateIndex = BAUD_115200;
     }
@@ -636,7 +636,7 @@ static void resetConf(void)
     failsafeConfig()->failsafe_throttle = 1000;         // default throttle off.
     failsafeConfig()->failsafe_kill_switch = 0;         // default failsafe switch action is identical to rc link loss
     failsafeConfig()->failsafe_throttle_low_delay = 100;// default throttle low delay for "just disarm" on failsafe condition
-    failsafeConfig()->failsafe_procedure = 0;           // default full failsafe procedure is 0: auto-landing, 1: drop, 2 : RTH
+    failsafeConfig()->failsafe_procedure = 1;           // default full failsafe procedure is 0: auto-landing, 1: drop, 2 : RTH
 
 #ifdef USE_SERVOS
     // servos
