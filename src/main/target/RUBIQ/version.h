@@ -16,9 +16,14 @@
  */
 
 #define FC_VERSION_THRUST_DEV_LEVEL_MAJOR 0 //increment when a significant change is made
-#define FC_VERSION_THRUST_DEV_LEVEL_MINOR 2c //increment when a bug is fixed
+#define FC_VERSION_THRUST_DEV_LEVEL_MINOR 3 //increment when a bug is fixed
 
 /* Version Log
+
+Version 0.3
+- Beeper now beeps for the duration of compass calibrations
+- GPS Baudrate has been changed to 9600
+- Failsafe is set to drop
 
 Version 0.2a
 - Changed return to home to use tail orientation
