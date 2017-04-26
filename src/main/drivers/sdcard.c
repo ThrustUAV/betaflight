@@ -270,13 +270,16 @@ static uint8_t sdcard_sendCommand(uint8_t commandCode, uint32_t commandArgument)
         0x95 /* Static CRC. This CRC is valid for CMD0 with a 0 argument, and CMD8 with 0x1AB argument, which are the only
         commands that require a CRC */
     };
-
+	
+	
     // Go ahead and send the command even if the card isn't idle if this is the reset command
     if (!sdcard_waitForIdle(SDCARD_MAXIMUM_BYTE_DELAY_FOR_CMD_REPLY) && commandCode != SDCARD_COMMAND_GO_IDLE_STATE)
         return 0xFF;
 
     spiTransfer(SDCARD_SPI_INSTANCE, NULL, command, sizeof(command));
 
+
+	
     /*
      * The card can take up to SDCARD_MAXIMUM_BYTE_DELAY_FOR_CMD_REPLY bytes to send the response, in the meantime
      * it'll transmit 0xFF filler bytes.
@@ -577,11 +580,12 @@ void sdcard_init(bool useDMA)
 
     spiTransfer(SDCARD_SPI_INSTANCE, NULL, NULL, SDCARD_INIT_NUM_DUMMY_BYTES);
 
+	
     // Wait for that transmission to finish before we enable the SDCard, so it receives the required number of cycles:
     int time = 100000;
     while (spiIsBusBusy(SDCARD_SPI_INSTANCE)) {
         if (time-- == 0) {
-            sdcard.state = SDCARD_STATE_NOT_PRESENT;
+			sdcard.state = SDCARD_STATE_NOT_PRESENT;
             sdcard.failureCount++;
             return;
         }
@@ -660,11 +664,22 @@ bool sdcard_poll(void)
     switch (sdcard.state) {
         case SDCARD_STATE_RESET:
             sdcard_select();
-
+			
+			/* For debugging purposes: Showcases visable alert for when state has been reached
+			ledToggle(0);
+			ledToggle(1);
+			ledToggle(2);
+			*/
+			
             initStatus = sdcard_sendCommand(SDCARD_COMMAND_GO_IDLE_STATE, 0);
 
             sdcard_deselect();
-
+			
+			/* For debugging purposes: Sends one packet of information and halts SD process
+			//sdcard.state = SDCARD_STATE_NOT_PRESENT;
+			//goto doMore;
+			*/
+			
             if (initStatus == SDCARD_R1_STATUS_BIT_IDLE) {
                 // Check card voltage and version
                 if (sdcard_validateInterfaceCondition()) {
