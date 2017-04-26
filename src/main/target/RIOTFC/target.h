@@ -22,21 +22,23 @@
 #define CONFIG_START_FLASH_ADDRESS 0x08080000 //0x08080000 to 0x080A0000 (FLASH_Sector_8)
 
 #define USBD_PRODUCT_STRING "Riot FC"
+/*
 #ifdef OPBL
 	#define USBD_SERIALNUMBER_STRING "0x8020000"
 #endif
+*/
 
-
+/*	LED Pin Configuration	*/
 #define LED0                    PB5
 #define LED1                    PB4
 #define LED2                    PB6
 
-#define BEEPER                  PC9
 
 #define INVERTER_PIN_USART6 	PC6
 #define INVERTER_USART          USART6
 
 // MPU9250 interrupt
+// Need to test and see if neccessary
 #define USE_EXTI
 #define MPU_INT_EXTI            PC5
 #define EXTI_CALLBACK_HANDLER_COUNT 1 // MPU data ready
@@ -44,7 +46,10 @@
 #define USE_MPU_DATA_READY_SIGNAL
 #define ENSURE_MPU_DATA_READY_IS_LOW
 
- /*
+/*	Legacy ACC/GYRO Configuration	*/
+/*	MPU6500 ACC/GYRO				*/
+/*
+
 #define MPU6500_CS_PIN          PC4
 #define MPU6500_SPI_INSTANCE    SPI1
 
@@ -61,6 +66,8 @@
  
 */ 
 
+
+/*	MPU6000 Configuration	*/
 #define MPU6000_CS_PIN          PC4
 #define MPU6000_SPI_INSTANCE    SPI1
 
@@ -69,73 +76,40 @@
 #define ACC_MPU6000_ALIGN       CW270_DEG
 
 #define GYRO
-	
-#define defaultRoll		0
-#define defaultPitch	180
-#define defaultYaw		270
-	
 #define USE_GYRO_SPI_MPU6000
 #define GYRO_MPU6000_ALIGN      CW270_DEG
 
+/*	Preset Roll/Pitch/Yaw
+#define defaultRoll		0
+#define defaultPitch	180
+#define defaultYaw		270
+*/
 
-#define MAG
-//#define USE_MAG_HMC5883
-#define USE_MAG_AK8963
 
-//#define MAG_HMC5883_ALIGN       CW180_DEG
-#define MAG_AK8963_ALIGN        CW270_DEG
-
+/*	Barometer Configuration	*/
 #define BARO
 #define USE_BARO_MS5611
 #define MS5611_I2C_INSTANCE I2CDEV_1
 
-//#define USE_BARO_BMP280
 
-// Flash Chip Defines
-//#define M25P16_CS_PIN           PB3
-//#define M25P16_SPI_INSTANCE     SPI3
-
-//#define RFM22B_CS_PIN           PA15
-//#define RFM22B_SPI_INSTANCE     SPI3
-	
-/*	
-	SD CARD Disabled until further notice
-*/
-
-/*
+/*	SD CARD Configuration Information	*/
+#define ENABLE_BLACKBOX_LOGGING_ON_SDCARD_BY_DEFAULT
 #define USE_SDCARD
 
-//#define SDCARD_DETECT_INVERTED
-
-//#define SDCARD_DETECT_PIN                   PB3
 #define SDCARD_SPI_INSTANCE                 SPI3
-#define SDCARD_SPI_CS_PIN                   PB3
+#define SDCARD_SPI_CS_PIN                   SPI3_NSS_PIN
 
 // SPI2 is on the APB1 bus whose clock runs at 84MHz. Divide to under 400kHz for init:
 #define SDCARD_SPI_INITIALIZATION_CLOCK_DIVIDER 256 // 328kHz
 // Divide to under 25MHz for normal operation:
 #define SDCARD_SPI_FULL_SPEED_CLOCK_DIVIDER     4 // 21MHz
 
-
 #define SDCARD_DMA_CHANNEL_TX               DMA1_Stream5
 #define SDCARD_DMA_CHANNEL_TX_COMPLETE_FLAG DMA_FLAG_TCIF5
 #define SDCARD_DMA_CLK                      RCC_AHB1Periph_DMA1
 #define SDCARD_DMA_CHANNEL                  DMA_Channel_0
 
-*/
-	
-#define USEMULTISHOT125	
-	
-	
-#define USE_DSHOT	
-	
-	
-	
-
-//#define USE_FLASHFS
-//#define USE_FLASH_M25P16
-//#define USE_FLASH_TOOLS
-
+/*	UART Configuration	*/
 #define USE_VCP
 #define VBUS_SENSING_PIN        PA8
 
@@ -154,9 +128,11 @@
 
 #define SERIAL_PORT_COUNT 4
 
+
+/*	SPI Devices	*/
 #define USE_SPI
 
-#define USE_SPI_DEVICE_1 //MPU9250
+#define USE_SPI_DEVICE_1 
 #define SPI1_NSS_PIN            PC4
 #define SPI1_SCK_PIN            PA5
 #define SPI1_MISO_PIN           PA6
@@ -168,15 +144,16 @@
 #define SPI3_MISO_PIN           PC11
 #define SPI3_MOSI_PIN           PC12
 
+/*	I2C Devices	*/
 #define USE_I2C
 #define I2C_DEVICE              (I2CDEV_1)
 //#define I2C_DEVICE_EXT          (I2CDEV_2)
 
-//MS5611 SPI pin defines
+///	MS5611 I2C Pins
 #define I2C1_SCL                PB8
 #define I2C1_SDA                PB9
 
-
+/*	ADC Configuration	*/
 #define USE_ADC
 #define VBAT_SCALE_DEFAULT      53 
 #define BOARD_HAS_VOLTAGE_DIVIDER
@@ -187,10 +164,13 @@
 #define VBAT_ADC_PIN           PC3
 #define VBAT_ADC_CHANNEL       ADC_Channel_13
 
+
+/*	LED Strip Driver Configuration	*/
 #define LED_STRIP
 #define LED_STRIP_LENGTH 35
 #define RIOTLEDCONFIG
 
+/*	Legacy WS2811 Configuration Information */
 /*
 #define WS2811_PIN                      PA0
 #define WS2811_TIMER                    TIM5
@@ -200,17 +180,17 @@
 #define WS2811_DMA_CHANNEL              DMA_Channel_6
 #define WS2811_TIMER_CHANNEL            TIM_Channel_1
 */
-	
+
+/* Default Configuration Information	*/	
 #define TELEMETRY
-
-#define DEFAULT_FEATURES        (FEATURE_VBAT | FEATURE_LED_STRIP | FEATURE_AIRMODE | FEATURE_CURRENT_METER | FEATURE_TELEMETRY)
-
+#define DEFAULT_FEATURES        (FEATURE_VBAT | FEATURE_LED_STRIP | FEATURE_AIRMODE | FEATURE_CURRENT_METER | FEATURE_TELEMETRY | FEATURE_BLACKBOX)
 #define DEFAULT_RX_FEATURE      FEATURE_RX_SERIAL
 #define SERIALRX_PROVIDER       SERIALRX_SBUS
 #define SERIALRX_UART           SERIAL_PORT_USART6
 #define RX_CHANNELS_TAER
-
 #define USE_SERIAL_4WAY_BLHELI_INTERFACE
+
+/*	Timer Configuration	*/
 
 #define TARGET_IO_PORTA 0xffff
 #define TARGET_IO_PORTB 0xffff

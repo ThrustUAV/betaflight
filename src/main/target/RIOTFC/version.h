@@ -16,9 +16,19 @@
  */
 
 #define FC_VERSION_THRUST_DEV_LEVEL_MAJOR 1 //increment when a significant change is made
-#define FC_VERSION_THRUST_DEV_LEVEL_MINOR 0 //increment when a bug is fixed
+#define FC_VERSION_THRUST_DEV_LEVEL_MINOR 1 //increment when a bug is fixed
 
 /* Version Log
+Version 1.1
+Enabled SDCard Ability
+ -Enabled SDCard Usage
+ -Introduced debugging information into SDCard.c
+ -Removed support for BEEPER and MAG(AK8963)
+ -Removed OPBL Target support
+ -Cleaned Target.h file
+ 
+ 
+
 Version 1.0
 Updated Overall Functions and Defaults
  -Updated LED counts to account for removal of LEDs 7, 24, 35
